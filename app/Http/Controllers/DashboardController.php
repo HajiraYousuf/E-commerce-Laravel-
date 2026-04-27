@@ -91,7 +91,7 @@ $stats = [
         "value" => "$124,563",
         "change" => "+12.5%",
         "trend" => "up",
-        "icon" => "dollar",
+        "type" => "revenue",
         "color" => "emerald",
     ],
     [
@@ -99,7 +99,7 @@ $stats = [
         "value" => "8,549",
         "change" => "+8.2%",
         "trend" => "up",
-        "icon" => "users",
+        "type" => "users",
         "color" => "blue",
     ],
     [
@@ -107,7 +107,7 @@ $stats = [
         "value" => "2,847",
         "change" => "+15.3%",
         "trend" => "up",
-        "icon" => "cart",
+        "type" => "orders",
         "color" => "purple",
     ],
     [
@@ -115,11 +115,11 @@ $stats = [
         "value" => "45,892",
         "change" => "-2.1%",
         "trend" => "down",
-        "icon" => "eye",
+        "type" => "views",
         "color" => "orange",
     ],
 ];
-    $activities = [
+$activities = [
         [
             'id' => 1,
             'type' => 'user',

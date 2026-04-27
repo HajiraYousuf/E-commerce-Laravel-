@@ -116,24 +116,39 @@
 
                 <div class="flex items-center space-x-1">
 
-                    @if($product['trend'] === 'up')
-                        <span class="text-emerald-500 text-xs font-medium">
-                            ▲ {{ $product['change'] }}
+                   @php
+                        $isUp = $product['trend'] === 'up';
+                        $icon = $isUp ? 'arrow-up-right' : 'arrow-down-right';
+                        $color = $isUp ? 'text-emerald-500' : 'text-red-500';
+                    @endphp
+
+                    <div class="flex items-center gap-1">
+
+                        <i data-lucide="{{ $icon }}"
+                        class="w-3.5 h-3.5 {{ $color }}"
+                        stroke-width="2.5"></i>
+
+                        <span class="text-xs font-medium {{ $color }}">
+                            {{ $product['change'] }}
                         </span>
-                    @else
-                        <span class="text-red-500 text-xs font-medium">
-                            ▼ {{ $product['change'] }}
-                        </span>
-                    @endif
 
-                </div>
+                                        </div>
+                                    </div>
 
-            </div>
+                                </div>
 
-        </div>
+                            </div>
 
-        @endforeach
+                            @endforeach
 
-    </div>
+                        </div>
 
-</div>
+                    </div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        lucide.createIcons();
+    });
+</script>
