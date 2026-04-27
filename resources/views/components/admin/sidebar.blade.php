@@ -1,192 +1,93 @@
-<x-admin.navbar>
-<div x-data="{ open: '' }"
-     class="w-72 flex flex-col bg-white/80 dark:bg-slate-900/80
-     backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-700/50">
+    <div class="w-72 transition-all duration-300 ease-in-out bg-white/80 dark:bg-slate-900/80
+backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-700/50 flex flex-col">
 
-    {{-- LOGO --}}
+    {{-- Logo --}}
     <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50">
-        <div class="flex items-center gap-3">
-
-            <div class="w-11 h-11 bg-gradient-to-r from-blue-600 to-purple-600
-                        rounded-xl flex items-center justify-center shadow-md">
-                <span class="text-white font-bold text-lg">⚡</span>
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl
+            flex items-center justify-center shadow-lg">
+                <i data-lucide="zap" class="w-6 h-6 text-white"></i>
             </div>
 
             <div>
-                <h1 class="text-2xl font-bold text-slate-800 dark:text-white">Nexus</h1>
+                <h1 class="text-xl font-bold text-slate-800 dark:text-white">Nexus</h1>
                 <p class="text-xs text-slate-500 dark:text-slate-400">Admin Panel</p>
             </div>
-
         </div>
     </div>
 
-    {{-- NAV --}}
-    <nav class="flex-1 p-4 space-y-2 overflow-y-auto text-[15px]">
+    {{-- Navigation --}}
+    <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
 
-        {{-- DASHBOARD --}}
-        <a href="/dashboard"
-           class="flex items-center justify-between px-4 py-3 rounded-xl
-           bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg">
-            <span>📊 Dashboard</span>
-            <span class="text-xs bg-red-500 px-2 py-0.5 rounded-full">New</span>
-        </a>
+        @foreach($menuItems as $item)
+            <div x-data="{ open: false }">
 
-        {{-- ANALYTICS --}}
-        <div>
-            <button @click="open = open === 'analytics' ? '' : 'analytics'"
-                class="w-full flex items-center justify-between px-4 py-3 rounded-xl
-                text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/50">
+                {{-- Main Button --}}
+                <button @click="open = !open"
+                    class="w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200
+                    {{ request()->is($item['id']) || ($item['active'] ?? false)
+                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
+                        : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50'
+                    }}">
 
-                <span>📈 Analytics</span>
+                    <div class="flex items-center space-x-3">
+                        <i data-lucide="{{ $item['icon'] }}" class="w-5 h-5"></i>
 
-                <svg class="w-4 h-4 transition-transform"
-                     :class="open === 'analytics' ? 'rotate-180' : ''"
-                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M19 9l-7 7-7-7"/>
-                </svg>
-            </button>
+                        <span class="font-medium ml-2">{{ $item['label'] }}</span>
 
-            <div x-show="open === 'analytics'" x-transition
-                 class="ml-6 mt-2 space-y-1 border-l border-slate-200 dark:border-slate-700 pl-3">
+                        {{-- Badge --}}
+                        @if(isset($item['badge']))
+                            <span class="px-2 py-1 text-xs bg-red-500 text-white rounded-full">
+                                {{ $item['badge'] }}
+                            </span>
+                        @endif
 
-                <a href="/analytics/overview"
-                   class="block text-sm text-slate-600 dark:text-slate-300 hover:text-blue-500">
-                    Overview
-                </a>
+                        {{-- Count --}}
+                        @if(isset($item['count']))
+                            <span class="px-2 py-1 text-xs bg-slate-200 dark:bg-slate-700
+                            text-slate-600 dark:text-slate-300 rounded-full">
+                                {{ $item['count'] }}
+                            </span>
+                        @endif
+                    </div>
 
-                <a href="/analytics/reports"
-                   class="block text-sm text-slate-600 dark:text-slate-300 hover:text-blue-500">
-                    Reports
-                </a>
+                    {{-- Arrow --}}
+                    @if(isset($item['submenu']))
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    @endif
+                </button>
 
-                <a href="/analytics/insights"
-                   class="block text-sm text-slate-600 dark:text-slate-300 hover:text-blue-500">
-                    Insights
-                </a>
-
-            </div>
-        </div>
-
-        {{-- USERS --}}
-        <div>
-            <button @click="open = open === 'users' ? '' : 'users'"
-                class="w-full flex items-center justify-between px-4 py-3 rounded-xl
-                text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/50">
-
-                <span>👥 Users</span>
-                <span class="text-xs bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded-full">2.4k</span>
-            </button>
-
-            <div x-show="open === 'users'" x-transition
-                 class="ml-6 mt-2 space-y-1 border-l border-slate-200 dark:border-slate-700 pl-3">
-
-                <a href="/users" class="block text-sm text-slate-600 dark:text-slate-300 hover:text-blue-500">
-                    All Users
-                </a>
-
-                <a href="/users/roles" class="block text-sm text-slate-600 dark:text-slate-300 hover:text-blue-500">
-                    Roles
-                </a>
-
-                <a href="/users/activity" class="block text-sm text-slate-600 dark:text-slate-300 hover:text-blue-500">
-                    Activity
-                </a>
+                {{-- Submenu --}}
+                @if(isset($item['submenu']))
+                    <div x-show="open" class="ml-8 mt-2 space-y-1">
+                        @foreach($item['submenu'] as $sub)
+                            <a href="#"
+                               class="block w-full text-left p-2 text-sm text-slate-600 
+                               dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200
+                               hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded-lg transition-all">
+                                {{ $sub['label'] }}
+                            </a>
+                        @endforeach
+                    </div>
+                @endif
 
             </div>
-        </div>
-
-        {{-- ECOMMERCE --}}
-        <div>
-            <button @click="open = open === 'ecom' ? '' : 'ecom'"
-                class="w-full flex items-center justify-between px-4 py-3 rounded-xl
-                text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/50">
-
-                <span>🛒 E-commerce</span>
-            </button>
-
-            <div x-show="open === 'ecom'" x-transition
-                 class="ml-6 mt-2 space-y-1 border-l border-slate-200 dark:border-slate-700 pl-3 ">
-
-                <a href="/products" class="block text-sm text-slate-600 dark:text-slate-300 hover:text-blue-500">
-                    Products
-                </a>
-
-                <a href="/orders" class="block text-sm text-slate-600 dark:text-slate-300 hover:text-blue-500">
-                    Orders
-                </a>
-
-                <a href="/customers" class="block text-sm text-slate-600 dark:text-slate-300 hover:text-blue-500">
-                    Customers
-                </a>
-
-            </div>
-        </div>
-
-        {{-- SIMPLE LINKS (FIXED ALIGNMENT) --}}
-        <a href="/inventory"
-           class="flex items-center justify-between px-4 py-3 rounded-xl
-           hover:bg-slate-100 dark:hover:bg-slate-800/50 dark:text-slate-300">
-
-            <span>📦 Inventory</span>
-
-            <span class="text-xs bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded-full">
-                847
-            </span>
-        </a>
-
-        <a href="/transactions"
-           class=" dark:text-slate-300 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/50">
-            💳 Transactions
-        </a>
-
-        <a href="/messages"
-           class=" dark:text-slate-300 flex items-center justify-between px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/50">
-
-            <span >💬 Messages</span>
-
-            <span class="text-xs bg-red-500 text-white px-2 py-0.5 rounded-full">
-                12
-            </span>
-        </a>
-
-        {{-- FIXED (THIS WAS CAUSING ROW ISSUE) --}}
-        <a href="/calendar"
-           class="block px-4 py-3 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/50">
-            📅 Calendar
-        </a>
-
-        <a href="/reports"
-           class="block px-4 py-3 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/50">
-            📄 Reports
-        </a>
-
-        <a href="/settings"
-           class="block px-4 py-3 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/50">
-            ⚙️ Settings
-        </a>
+        @endforeach
 
     </nav>
 
-    {{-- PROFILE --}}
+    {{-- User Profile --}}
     <div class="p-4 border-t border-slate-200/50 dark:border-slate-700/50">
-        <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-
-            <img src="/images/user.jpg"
-                 class="w-11 h-11 rounded-full ring-2 ring-blue-500"
-                 alt="user">
-
-            <div class="min-w-0">
-                <p class="text-sm font-semibold text-slate-800 dark:text-white truncate">
-                    Amal
-                </p>
-                <p class="text-xs text-slate-500">
-                    Administrator
-                </p>
-            </div>
-
+        <div class="flex items-center space-x-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 p-2">
+            <img src="/images/user.jpg" class="w-10 h-10 rounded-full ring-2 ring-blue-500" />
+            <p class="text-sm font-medium text-slate-800 dark:text-white">Amal</p>
         </div>
     </div>
 
 </div>
-</x-admin.navbar>
+
+{{-- Lucide Icons --}}
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    lucide.createIcons();
+</script>
