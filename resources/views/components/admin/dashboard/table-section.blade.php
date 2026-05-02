@@ -1,3 +1,70 @@
+@php
+    $recentOrders = [
+        [
+            'id' => '#3847',
+            'customer' => 'Ahmet Mahad',
+            'product' => 'MacBook Pro 16',
+            'amount' => '$2,399',
+            'status' => 'completed',
+            'date' => '2024-01-15',
+        ],
+        [
+            'id' => '#3848',
+            'customer' => 'Sarah Osman',
+            'product' => 'iPhone 15 Pro',
+            'amount' => '$1,199',
+            'status' => 'pending',
+            'date' => '2024-01-15',
+        ],
+        [
+            'id' => '#3849',
+            'customer' => 'Negaad Ahmed',
+            'product' => 'AirPods Pro',
+            'amount' => '$249',
+            'status' => 'completed',
+            'date' => '2024-01-14',
+        ],
+        [
+            'id' => '#3850',
+            'customer' => 'Mohamet Khadar',
+            'product' => 'iPad Air',
+            'amount' => '$599',
+            'status' => 'cancelled',
+            'date' => '2024-01-14',
+        ],
+    ];
+    $topProducts = [
+        [
+            'name' => 'MacBook Pro 16',
+            'sales' => 1247,
+            'revenue' => '$2,987,530',
+            'trend' => 'up',
+            'change' => '+12%',
+        ],
+        [
+            'name' => 'iPhone 15 Pro',
+            'sales' => 2156,
+            'revenue' => '$2,587,044',
+            'trend' => 'up',
+            'change' => '+8%',
+        ],
+        [
+            'name' => 'AirPods Pro',
+            'sales' => 3421,
+            'revenue' => '$852,229',
+            'trend' => 'down',
+            'change' => '-3%',
+        ],
+        [
+            'name' => 'iPad Air',
+            'sales' => 987,
+            'revenue' => '$591,213',
+            'trend' => 'up',
+            'change' => '+15%',
+        ],
+    ];
+
+@endphp
 <div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-200/50 dark:border-slate-700/50 overflow-hidden">
 
     <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50 flex items-center justify-between">

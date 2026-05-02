@@ -1,3 +1,12 @@
+@php 
+         $salesData = [
+        ['name' => 'Electronics', 'value' => 45, 'color' => '#3b82fe'],
+        ['name' => 'Clothing', 'value' => 30, 'color' => '#8b5cf6'],
+        ['name' => 'Books', 'value' => 15, 'color' => '#10b981'],
+        ['name' => 'Other', 'value' => 10, 'color' => '#f59e0b'],
+    ];
+
+@endphp
 <div class="bg-white dark:bg-slate-900 backdrop-blur-xl rounded-b-2xl p-6 border border-slate-200/50 dark:border-slate-700/50">
 
     {{-- Header --}}

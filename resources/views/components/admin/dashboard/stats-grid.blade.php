@@ -1,3 +1,39 @@
+@php
+    $stats = [
+    [
+        "title" => "Total Revenue",
+        "value" => "$124,563",
+        "change" => "+12.5%",
+        "trend" => "up",
+        "type" => "revenue",
+        "color" => "emerald",
+    ],
+    [
+        "title" => "Active Users",
+        "value" => "8,549",
+        "change" => "+8.2%",
+        "trend" => "up",
+        "type" => "users",
+        "color" => "blue",
+    ],
+    [
+        "title" => "Total Orders",
+        "value" => "2,847",
+        "change" => "+15.3%",
+        "trend" => "up",
+        "type" => "orders",
+        "color" => "purple",
+    ],
+    [
+        "title" => "Page Views",
+        "value" => "45,892",
+        "change" => "-2.1%",
+        "trend" => "down",
+        "type" => "views",
+        "color" => "orange",
+    ],
+];
+@endphp
 <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
 
 @foreach($stats as $stat)
@@ -22,6 +58,7 @@
     ];
 
     $color = $colors[$stat['color']];
+    
 @endphp
 
 <div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-200/50 dark:border-slate-700/50 transition-all duration-300 group">
