@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="">
 <head>
     <meta charset="UTF-8">
     <title>{{ $title ?? 'Dashboard' }}</title>
@@ -21,7 +21,7 @@ dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-all duration
     <div class="flex-1 flex flex-col overflow-hidden">
 
         {{-- HEADER --}}
-        <header class="h-16 border-b border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl">
+        <header class="border-b border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl">
             <x-admin.header />
         </header>
 
@@ -38,6 +38,60 @@ dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-all duration
 </div>
 
 @stack('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const html = document.documentElement;
+
+    // Load theme
+    const theme = localStorage.getItem("theme");
+
+    if (theme === "dark") {
+        html.classList.add("dark");
+    } else {
+        html.classList.remove("dark");
+    }
+
+    initIcons();
+    updateIcon();
+
+    // Toggle button
+    const btn = document.getElementById("themeToggle");
+
+    if (btn) {
+        btn.addEventListener("click", () => {
+            html.classList.toggle("dark");
+
+            localStorage.setItem(
+                "theme",
+                html.classList.contains("dark") ? "dark" : "light"
+            );
+
+            updateIcon();
+        });
+    }
+});
+
+// ICONS
+function initIcons() {
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+}
+
+// UPDATE ICON
+function updateIcon() {
+    const icon = document.getElementById("themeIcon");
+
+    if (!icon) return;
+
+    const isDark = document.documentElement.classList.contains("dark");
+
+    icon.setAttribute("data-lucide", isDark ? "moon" : "sun");
+
+    lucide.createIcons();
+}    
+    </script>
+
 
 </body>
 </html>

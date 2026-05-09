@@ -18,6 +18,7 @@ Route::get('/dashboard', function () {
 
 // ADMIN DASHBOARD
 Route::get('/admin/dashboard', [PagesController::class, 'dashboard'])->name('admin.dashboard')->middleware(['auth', 'admin']);
+Route::get('/admin/overview', [PagesController::class, 'overview'])->name('admin.overview')->middleware(['auth', 'admin']);
 Route::get('categories/',[CategoryController::class, 'index'])->name('categories');
 Route::get('/categories/create', [CategoryController::class, 'create'])->name('category.create');
 Route::post('categories/store',[CategoryController::class, 'store'])->name('category.store');

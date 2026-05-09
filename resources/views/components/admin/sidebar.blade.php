@@ -6,13 +6,14 @@
         "label" => "Dashboard",
         "active" => true,
         "badge" => "New",
+        "route" => "admin.dashboard"
     ],
     [
         "id" => "analytics",
         "icon" => "BarChart3",
         "label" => "Analytics",
         "submenu" => [
-            ["id" => "overview", "label" => "Overview"],
+            ["id" => "overview", "label" => "Overview", "route" => "admin.overview"],
             ["id" => "reports", "label" => "Reports"],
             ["id" => "insights", "label" => "Insights"],
         ],
@@ -74,7 +75,7 @@
 
 @endphp
 <div class="w-72 h-full transition-all duration-300 ease-in-out bg-white/80 dark:bg-slate-900/80
-backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-700/50 flex flex-col">
+backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-700/50 flex flex-col -ml-6">
 
     {{-- Logo --}}
     <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50">
@@ -98,7 +99,8 @@ backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-700/50 flex flex
             <div x-data="{ open: false }">
 
                 {{-- Main Button --}}
-                <button @click="open = !open"
+                <a href="{{ isset($item['route']) ? route($item['route']) : '#' }}" 
+                @click="open = !open"
                     class="w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200
                     {{ request()->is($item['id']) || ($item['active'] ?? false)
                         ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
@@ -130,22 +132,21 @@ backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-700/50 flex flex
                     @if(isset($item['submenu']))
                         <i data-lucide="chevron-down" class="w-4 h-4"></i>
                     @endif
-                </button>
+                </a>
 
                 {{-- Submenu --}}
                 @if(isset($item['submenu']))
                     <div x-show="open" class="ml-8 mt-2 space-y-1">
                         @foreach($item['submenu'] as $sub)
-                            <a href="#"
-                               class="block w-full text-left p-2 text-sm text-slate-600 
-                               dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200
-                               hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded-lg transition-all">
+                            <a href="{{ isset($sub['route']) && Route::has($sub['route']) ? route($sub['route']) : '#' }}"
+                            class="block w-full text-left p-2 text-sm text-slate-600 
+                            dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200
+                            hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded-lg transition-all">
                                 {{ $sub['label'] }}
                             </a>
                         @endforeach
                     </div>
                 @endif
-
             </div>
         @endforeach
 

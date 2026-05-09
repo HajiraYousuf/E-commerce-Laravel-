@@ -55,12 +55,12 @@
             </button>
 
             <!-- Toggle -->
-            <button 
-            class='p-2.5 rounded-xl text-slate-600 dark:text-slate-300 
-            hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors'>
-                <i data-lucide="sun" class='w-5 h-5'></i>
-            </button>
+            <button id="themeToggle" 
+            class="p-2.5 rounded-xl text-slate-600 dark:text-slate-300 
+            hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
 
+                <i id="themeIcon" data-lucide="sun" class="w-5 h-5"></i>
+            </button>
             <!-- Notification  -->
             <button 
             class='relative p-2.5 rounded-xl text-slate-600 dark:text-slate-300 
@@ -104,6 +104,4 @@
       </div>
     </div>
 
-     <script>
-        lucide.createIcons();
-    </script>
+     

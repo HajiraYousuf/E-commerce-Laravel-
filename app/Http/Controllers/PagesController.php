@@ -8,6 +8,9 @@ class PagesController extends Controller
 {
     public function dashboard()
     {
-        return view('admin.dashboard'); 
+        return view('admin.dashboards.dashboard'); 
+    }
+    public function overview(){
+        return view('admin.dashboards.overview');
     }
 }
