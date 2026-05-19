@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    @vite('resources/css/app.css')
-    <script src="https://unpkg.com/lucide@latest"></script>
-</head>
-<body class="bg-black">
-    <div 
+<div 
     class='bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b 
     border-slate-200/50 dark:border-slate-700/50 px-6 py-4 '>
       <div 
@@ -65,12 +55,12 @@
             </button>
 
             <!-- Toggle -->
-            <button 
-            class='p-2.5 rounded-xl text-slate-600 dark:text-slate-300 
-            hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors'>
-                <i data-lucide="sun" class='w-5 h-5'></i>
-            </button>
+            <button id="themeToggle" 
+            class="p-2.5 rounded-xl text-slate-600 dark:text-slate-300 
+            hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
 
+                <i id="themeIcon" data-lucide="sun" class="w-5 h-5"></i>
+            </button>
             <!-- Notification  -->
             <button 
             class='relative p-2.5 rounded-xl text-slate-600 dark:text-slate-300 
@@ -113,11 +103,5 @@
         </div>
       </div>
     </div>
-        {{$slot}}
 
-     <script>
-        lucide.createIcons();
-    </script>
-
-</body>
-</html>
+     
