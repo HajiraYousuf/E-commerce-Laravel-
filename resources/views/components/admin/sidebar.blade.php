@@ -14,8 +14,8 @@
         "label" => "Analytics",
         "submenu" => [
             ["id" => "overview", "label" => "Overview", "route" => "admin.overview"],
-            ["id" => "reports", "label" => "Reports"],
-            ["id" => "insights", "label" => "Insights"],
+            ["id" => "reports", "label" => "Reports", "route" => "admin.report"],
+            ["id" => "insights", "label" => "Insights", "route" => "admin.insight"],
         ],
     ],
     [
@@ -24,9 +24,9 @@
         "label" => "Users",
         "count" => "2.4k",
         "submenu" => [
-            ["id" => "all_users", "label" => "All Users"],
-            ["id" => "roles", "label" => "Roles & Permissions"],
-            ["id" => "activity", "label" => "User Activity"],
+            ["id" => "all_users", "label" => "All Users","route" => "admin.users_list"],
+            ["id" => "roles", "label" => "Roles & Permissions","route" => "admin.roles_perm"],
+            ["id" => "activity", "label" => "User Activity","route" => "admin.user_activity"],
         ],
     ],
     [
@@ -34,6 +34,7 @@
         "icon" => "ShoppingBag",
         "label" => "E-commerce",
         "submenu" => [
+            ["id" => "categories", "label" => "categories","route" => "admin.categories"],
             ["id" => "products", "label" => "Products"],
             ["id" => "orders", "label" => "Orders"],
             ["id" => "customers", "label" => "Customers"],
@@ -44,32 +45,32 @@
         "icon" => "Package",
         "label" => "Inventory",
         "count" => "847",
+        "route" => "admin.inventory"
     ],
     [
         "id" => "transactions",
         "icon" => "CreditCard",
         "label" => "Transactions",
+        "route" => "admin.transaction"
     ],
     [
         "id" => "messages",
         "icon" => "MessagesSquare",
         "label" => "Messages",
         "badge" => "12",
+        "route" => "admin.messages"
     ],
     [
         "id" => "calendar",
         "icon" => "Calendar",
         "label" => "Calendar",
-    ],
-    [
-        "id" => "reports",
-        "icon" => "FileText",
-        "label" => "Reports",
+        "route" => "admin.calendar"
     ],
     [
         "id" => "settings",
         "icon" => "Settings",
         "label" => "Settings",
+        "route" => "admin.settings"
     ],
 ];
 

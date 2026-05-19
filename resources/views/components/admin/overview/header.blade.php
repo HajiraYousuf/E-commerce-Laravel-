@@ -6,13 +6,13 @@
             Analytics Overview
         </h1>
         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Deep dive into your business performance and trends
+            Track revenue, orders, and product trends across your electronics store
         </p>
     </div>
 
     <!-- RIGHT SIDE -->
     <div class="flex items-center gap-3">
-
+  
         <!-- DATE RANGE -->
         <div id="dateButton"
             class="flex items-center gap-3 px-4 py-2 rounded-xl border

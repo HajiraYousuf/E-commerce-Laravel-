@@ -95,7 +95,7 @@
             <!-- Buttons -->
             <div class="mt-10 flex flex-col md:flex-row gap-3 md:justify-end">
 
-                <a href="{{ route('categories') }}"
+                <a href="{{ route('admin.categories') }}"
                    class="px-6 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 
                           text-slate-700 dark:text-white text-center
                           hover:scale-105 transition">
