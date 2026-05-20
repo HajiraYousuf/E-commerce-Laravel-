@@ -1,23 +1,10 @@
 @php
-$demographics = [
-    'gender' => [
-        ['label' => 'Male', 'value' => 62, 'color' => '#8B5CF6'],
-        ['label' => 'Female', 'value' => 35, 'color' => '#3B82F6'],
-    ],
-    'ages' => [
-        ['range' => '18-24', 'value' => 45, 'color' => 'from-blue-500 to-violet-600'],
-        ['range' => '25-34', 'value' => 30, 'color' => 'from-blue-500 to-violet-600'],
-        ['range' => '35-44', 'value' => 15, 'color' => 'from-blue-500 to-violet-600'],
-        ['range' => '45+', 'value' => 10, 'color' => 'from-red-500 to-red-600'],
-    ]
-];
-
-$totalUsers = '12.5K';
-
-$genderLabels = collect($demographics['gender'])->pluck('label');
-$genderValues = collect($demographics['gender'])->pluck('value');
-$genderColors = collect($demographics['gender'])->pluck('color');
+$genderLabels = collect($genderData)->pluck('label');
+$genderValues = collect($genderData)->pluck('value');
+$genderColors = collect($genderData)->pluck('color');
 @endphp
+
+
 <div class="relative overflow-hidden rounded-2xl border border-slate-200 dark:border-white/10 
 bg-white dark:bg-[#081028]/95 p-4 shadow-xl dark:shadow-2xl h-full flex flex-col min-h-[300px]">
 
@@ -58,7 +45,7 @@ bg-white dark:bg-[#081028]/95 p-4 shadow-xl dark:shadow-2xl h-full flex flex-col
 
                 {{-- GENDER --}}
                 <div class="mt-2 space-y-2 text-sm">
-                    @foreach ($demographics['gender'] as $gender)
+                    @foreach ($genderData as $gender)
                         <div class="flex items-center gap-2">
 
                             <span class="h-2 w-2 rounded-full"
@@ -86,7 +73,7 @@ bg-white dark:bg-[#081028]/95 p-4 shadow-xl dark:shadow-2xl h-full flex flex-col
                 </h3>
 
                 <div class="space-y-3 text-sm">
-                    @foreach ($demographics['ages'] as $age)
+                    @foreach ($ageData as $age)
                         <div>
                             <div class="flex justify-between mb-1">
                                 <span class="text-slate-600 dark:text-slate-300">
@@ -112,6 +99,7 @@ bg-white dark:bg-[#081028]/95 p-4 shadow-xl dark:shadow-2xl h-full flex flex-col
 
     </div>
 </div>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 

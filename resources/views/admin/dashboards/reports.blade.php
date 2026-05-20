@@ -16,44 +16,30 @@ resources/views/dashboard.blade.php
         </p>
     </div>
 
-    {{-- STATS CARDS --}}
+    {{-- STATS --}}
     <div class="mb-6">
-        <x-admin.report.stats />
+        <x-admin.report.stats :stats="$stats" />
     </div>
 
-    {{-- MIDDLE SECTION --}}
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
-
-        {{-- LEFT (CHART) --}}
-        <div class="xl:col-span-2">
-            <x-admin.report.sales-chart />
-        </div>
-
-        {{-- RIGHT (CATEGORY) --}}
-        <div>
-            <x-admin.report.report-category />
-        </div>
-
+    {{-- CHART --}}
+    <div class="mb-6">
+        <x-admin.report.sales-chart :salesChart="$salesChart" :range="$range" />
     </div>
 
-
-    {{-- TABLE + EXPORT + RECENT --}}
+    {{-- MAIN GRID --}}
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
 
-        {{-- LEFT SIDE (TABLE + EXPORT stacked) --}}
+        {{-- LEFT SIDE --}}
         <div class="xl:col-span-2 flex flex-col gap-6">
 
-            {{-- TOP SELLING TABLE --}}
-            <x-admin.report.top-products />
-
-            {{-- EXPORT REPORTS --}}
+            <x-admin.report.top-products :topProducts="$topProducts"/>
             <x-admin.report.export-report />
 
         </div>
 
-        {{-- RIGHT SIDE --}}
+        {{-- RIGHT SIDE (ONLY RECENT REPORTS) --}}
         <div>
-            <x-admin.report.recent-report />
+            <x-admin.report.recent-report :reports="$reports" />
         </div>
 
     </div>

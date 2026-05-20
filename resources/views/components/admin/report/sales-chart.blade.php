@@ -9,10 +9,18 @@
             Sales Overview
         </h2>
 
-        <select class="bg-gray-100 dark:bg-[#111827] text-gray-700 dark:text-gray-300 px-3 py-2 rounded-xl border border-gray-200 dark:border-white/10 text-sm">
-            <option>Monthly</option>
-        </select>
+        <form method="GET" class="flex items-center mb-4">
+            <select name="range"
+                    onchange="this.form.submit()"
+                    class="bg-gray-100 dark:bg-[#111827] text-gray-700 dark:text-gray-300 px-3 py-2 rounded-xl border border-gray-200 dark:border-white/10 text-sm">
 
+                <option value="daily" {{ $range=='daily'?'selected':'' }}>Daily</option>
+                <option value="weekly" {{ $range=='weekly'?'selected':'' }}>Weekly</option>
+                <option value="monthly" {{ $range=='monthly'?'selected':'' }}>Monthly</option>
+                <option value="yearly" {{ $range=='yearly'?'selected':'' }}>Yearly</option>
+
+            </select>
+        </form>
     </div>
 
     {{-- CHART --}}
@@ -23,23 +31,31 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    const salesData = Array.from({ length: 31 }, (_, i) => ({
-        day: `May ${i + 1}`,
-        sales: Math.floor(Math.random() * 15000) + 5000
-    }));
+document.addEventListener("DOMContentLoaded", function () {
+
+    const salesData = @json($salesChart);
 
     const labels = salesData.map(i => i.day);
     const values = salesData.map(i => i.sales);
 
-    const ctx = document.getElementById('salesChart').getContext('2d');
+    const canvas = document.getElementById('salesChart');
+
+    if (!canvas) return; // safety
+
+    const ctx = canvas.getContext('2d');
 
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
     gradient.addColorStop(0, '#6366f1');
     gradient.addColorStop(1, '#4f46e5');
 
-    new Chart(ctx, {
+    if (window.salesChartInstance) {
+        window.salesChartInstance.destroy();
+    }
+
+    window.salesChartInstance = new Chart(ctx, {
         type: 'bar',
         data: {
             labels,
@@ -52,42 +68,51 @@
                 hoverBackgroundColor: '#818cf8'
             }]
         },
-
         options: {
             responsive: true,
             maintainAspectRatio: false,
-
             plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: '#111827',
-                    titleColor: '#fff',
-                    bodyColor: '#cbd5e1',
-                    displayColors: false,
-                    padding: 10,
-                    callbacks: {
-                        label: c => '$' + c.raw.toLocaleString()
-                    }
-                }
+                legend: { display: false }
             },
-
             scales: {
-
                 x: {
-                    grid: { display: false },
-                    ticks: {
-                        color: '#94a3b8',
-                        maxRotation: 0,
-                        autoSkip: false,
-                        callback: (v, i) => [0,4,10,15,20,25,30].includes(i) ? labels[i] : ''
-                    }
-                },
+    grid: { display: false },
+    ticks: {
+        color: '#94a3b8',
+        autoSkip: false,
+
+        callback: function(value, index) {
+
+            const range = "{{ $range }}";
+
+            // DAILY → tus 5-6 points
+            if (range === 'daily') {
+                return [0, 4, 8, 12, 16, 20, 23].includes(index) ? this.getLabelForValue(value) : '';
+            }
+
+            // WEEKLY → tus dhammaan (7 days only)
+            if (range === 'weekly') {
+                return this.getLabelForValue(value);
+            }
+
+            // MONTHLY → tus only few days
+            if (range === 'monthly') {
+                return [0, 5, 10, 15, 20, 25, 30].includes(index) ? this.getLabelForValue(value) : '';
+            }
+
+            // YEARLY → tus months muhiim ah
+            if (range === 'yearly') {
+                return [0, 2, 4, 6, 8, 10].includes(index) ? this.getLabelForValue(value) : '';
+            }
+
+            return '';
+        }
+    }
+},
 
                 y: {
                     beginAtZero: true,
-                    max: 20000,
                     ticks: {
-                        stepSize: 5000,
                         color: '#94a3b8',
                         callback: v => v === 0 ? '0' : (v/1000)+'K'
                     },
@@ -99,4 +124,6 @@
             }
         }
     });
+
+});
 </script>

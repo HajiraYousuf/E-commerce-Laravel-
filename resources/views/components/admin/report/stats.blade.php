@@ -1,16 +1,10 @@
-@php
-$stats = [
-    ['title'=>'Total Revenue','value'=>'$45,231','growth'=>'+20.1%','icon'=>'ri-money-dollar-circle-line','color'=>'emerald','chart'=>[15,25,20,40,30,55,48]],
-    ['title'=>'Total Orders','value'=>'+2350','growth'=>'+180.1%','icon'=>'ri-shopping-bag-3-line','color'=>'blue','chart'=>[10,15,12,25,20,40,35]],
-    ['title'=>'Total Customers','value'=>'+12,234','growth'=>'-8.4%','icon'=>'ri-group-line','color'=>'violet','chart'=>[38,30,28,22,20,18,10]],
-    ['title'=>'Total Profit','value'=>'+573','growth'=>'+201','icon'=>'ri-line-chart-line','color'=>'rose','chart'=>[18,15,25,22,30,35,32]],
-];
 
+@php
 $colors = [
-'emerald'=>['iconText'=>'text-emerald-500 dark:text-emerald-400','line'=>'#10b981'],
-'blue'=>['iconText'=>'text-blue-500 dark:text-blue-400','line'=>'#3b82f6'],
-'violet'=>['iconText'=>'text-violet-500 dark:text-violet-400','line'=>'#8b5cf6'],
-'rose'=>['iconText'=>'text-rose-500 dark:text-rose-400','line'=>'#f43f5e'],
+    'emerald' => ['iconText' => 'text-emerald-500 dark:text-emerald-400', 'line' => '#10b981'],
+    'blue'    => ['iconText' => 'text-blue-500 dark:text-blue-400', 'line' => '#3b82f6'],
+    'violet'  => ['iconText' => 'text-violet-500 dark:text-violet-400', 'line' => '#8b5cf6'],
+    'rose'    => ['iconText' => 'text-rose-500 dark:text-rose-400', 'line' => '#f43f5e'],
 ];
 @endphp
 
@@ -21,22 +15,38 @@ $colors = [
 @foreach($stats as $stat)
 
 @php
-$currentColor=$colors[$stat['color']];
-$max=max($stat['chart']);
+$currentColor = $colors[$stat['color']];
 
-$points=collect($stat['chart'])->map(fn($v,$i)=>[
-$i*20,
-55-(($v/$max)*35)
-]);
+// SAFE max (avoid crash when chart empty)
+$max = !empty($stat['chart']) ? max($stat['chart']) : 1;
 
-$line="M ";
-foreach($points as $i=>$p){
-if($i==0){$line.="{$p[0]} {$p[1]} ";}
-else{$prev=$points[$i-1];$cx=($prev[0]+$p[0])/2;$line.="C $cx {$prev[1]}, $cx {$p[1]}, {$p[0]} {$p[1]} ";}
+// build points safely
+$points = collect($stat['chart'])->map(function ($v, $i) use ($max) {
+    return [
+        $i * 20,
+        55 - (($v / $max) * 35)
+    ];
+});
+
+// build SVG line
+$line = "M ";
+
+foreach ($points as $i => $p) {
+    if ($i == 0) {
+        $line .= "{$p[0]} {$p[1]} ";
+    } else {
+        $prev = $points[$i - 1];
+        $cx = ($prev[0] + $p[0]) / 2;
+
+        $line .= "C $cx {$prev[1]}, $cx {$p[1]}, {$p[0]} {$p[1]} ";
+    }
 }
 
-$area=$line." L 120 60 L 0 60 Z";
-$isNegative=str_contains($stat['growth'],'-');
+$area = $line . " L 120 60 L 0 60 Z";
+
+// ✅ dynamic growth (IMPORTANT FIX)
+$growth = (float) $stat['growth'];
+$isNegative = $growth < 0;
 @endphp
 
 <div class="group relative rounded-2xl p-4 sm:p-5
@@ -103,7 +113,8 @@ transition-all duration-300">
                 }}">
 
                 <i class="ri-arrow-{{ $isNegative ? 'down' : 'up' }}-line"></i>
-                {{ $stat['growth'] }}
+
+                {{ $growth }}%
             </span>
 
             <span class="text-gray-400 dark:text-slate-500 text-xs">
@@ -118,4 +129,4 @@ transition-all duration-300">
 
 @endforeach
 
-</div>
+</div> 

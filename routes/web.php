@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardsController;
+use App\Http\Controllers\OverviewController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
 
 /*
@@ -12,11 +16,8 @@ use App\Http\Controllers\WishlistController;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::get('/home', function () {
+Route::get('/', function () {
     return view('components.user.pages.home');
 })->name('home');
 
@@ -121,12 +122,12 @@ Route::get('/dashboard', function () {
 |--------------------------------------------------------------------------
 */
 
-Route::get('/admin/dashboard', [PagesController::class, 'dashboard'])
+Route::get('/admin/dashboard', [DashboardsController::class, 'dashboard'])
     ->middleware(['auth', 'admin'])
     ->name('admin.dashboard');
 
-Route::get('/admin/overview', [PagesController::class, 'overview'])->name('admin.overview');
-Route::get('/admin/report', [PagesController::class, 'report'])->name('admin.report');
+Route::get('/admin/overview', [OverviewController::class, 'overview'])->name('admin.overview');
+Route::get('/admin/report', [ReportController::class, 'report'])->name('admin.report');
 Route::get('/admin/insight', [PagesController::class, 'insight'])->name('admin.insight');
 Route::get('/admin/inventory', [PagesController::class, 'inventroy'])->name('admin.inventory');
 Route::get('/admin/transaction', [PagesController::class, 'transaction'])->name('admin.transaction');
@@ -134,7 +135,7 @@ Route::get('/admin/calendar', [PagesController::class, 'calendar'])->name('admin
 Route::get('/admin/settings', [PagesController::class, 'settings'])->name('admin.settings');
 Route::get('/admin/messages', [PagesController::class, 'messages'])->name('admin.messages');
 Route::get('/admin/products', [PagesController::class, 'products'])->name('admin.products');
-Route::get('/admin/users-list', [PagesController::class, 'users'])->name('admin.users_list');
+Route::get('/admin/users-list', [UserController::class, 'index'])->name('admin.users_list');
 Route::get('/admin/roles-permissions', [PagesController::class, 'roles_perm'])->name('admin.roles_perm');
 Route::get('/admin/user-activity', [PagesController::class, 'user_activity'])->name('admin.user_activity');
 
@@ -147,3 +148,9 @@ Route::get('/admin/user-activity', [PagesController::class, 'user_activity'])->n
 Route::get('/admin/categories', [CategoryController::class, 'index'])->name('admin.categories');
 Route::get('/admin/categories/create', [CategoryController::class, 'create'])->name('admin.categories.create');
 Route::post('/admin/categories/store', [CategoryController::class, 'store'])->name('admin.categories.store');
+
+Route::get('/admin/reports/download/{type}', [ReportController::class, 'download'])
+    ->name('admin.reports.download');
+
+Route::get('/reports/export-all', [ReportController::class, 'exportAll'])
+    ->name('reports.export.all');

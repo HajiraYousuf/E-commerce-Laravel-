@@ -24,6 +24,10 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('postal_code')->nullable();
             $table->string('image')->nullable();
+            $table->string('gender')->nullable();
+            $table->integer('age')->nullable(); 
+            $table->string('region')->nullable()->after('age');
+
 
             // ROLE
             $table->string('role')->default('user');

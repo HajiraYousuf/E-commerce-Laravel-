@@ -1,101 +1,86 @@
-@php
-    // Dynamic data (monthly sales)
-    $data = [4000,5500,7000,5000,3500,6000,5000,6500,3500,5500,4500,7000,4000,5000,10000,6500,5000,3000,4000,5500,7500,6500,5500,5000,3000,3500,5000,6500,4500,7000,8000];
+<div class="bg-white dark:bg-slate-900 backdrop-blur-xl rounded-b-2xl p-6 border border-slate-200/50 dark:border-slate-700/50">
 
-    // Days (1–31)
-    $labels = range(1, count($data));
-@endphp
-
-<div class="bg-gradient-to-br from-[#0F172A] to-[#020617] border border-white/10 rounded-2xl p-6 shadow-xl">
-
-    {{-- HEADER --}}
-    <div class="flex items-center justify-between mb-6">
-        <h2 class="text-white text-xl font-semibold tracking-wide">
-            Sales Overview
-        </h2>
-
-        <select class="bg-[#111827] border border-white/10 text-gray-300 rounded-lg px-3 py-1 text-sm">
-            <option>Monthly</option>
-        </select>
+    {{-- Header --}}
+    <div class="mb-6">
+        <h3 class="text-lg font-bold text-slate-800 dark:text-white">
+            Sales by Category
+        </h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400">
+            Detailed breakdown by product category
+        </p>
     </div>
 
-    {{-- CANVAS --}}
-    <div class="h-[350px]">
-        <canvas id="salesChart"></canvas>
+    {{-- MAIN ROW --}}
+    <div class="flex items-center justify-between gap-6">
+
+        {{-- LEFT: CHART --}}
+        <div class="w-1/2 flex justify-center">
+            <div class="h-48 w-48">
+                <canvas id="salesChart"></canvas>
+            </div>
+        </div>
+
+        {{-- RIGHT: LEGEND --}}
+        <div class="w-1/2 space-y-4">
+
+            @foreach($salesData as $item)
+                <div class="flex justify-between items-center">
+
+                    {{-- LEFT --}}
+                    <div class="flex items-center space-x-3">
+                        <div class="w-3 h-3 rounded-full"
+                             style="background-color: {{ $item['color'] }}"></div>
+
+                        <span class="text-sm text-slate-600 dark:text-slate-400">
+                            {{ $item['name'] }}
+                        </span>
+                    </div>
+
+                    {{-- RIGHT --}}
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm text-slate-500">
+                            {{ number_format($item['total']) }}
+                        </span>
+
+                        <span class="text-sm font-semibold text-slate-800 dark:text-white">
+                            {{ $item['value'] }}%
+                        </span>
+                    </div>
+
+                </div>
+            @endforeach
+
+        </div>
+
     </div>
 
 </div>
+{{-- CHART --}}
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    const ctx = document.getElementById('salesChart').getContext('2d');
+    const salesData = @json($salesData);
 
-    const chartData = {
-        labels: @json($labels),
-        datasets: [{
-            label: 'Sales',
-            data: @json($data),
-
-            backgroundColor: 'rgba(59,130,246,0.7)',
-            borderRadius: 6,
-            barThickness: 8,
-            hoverBackgroundColor: 'rgba(96,165,250,1)',
-        }]
-    };
-
-    const chartOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-
-        plugins: {
-            legend: { display: false },
-            tooltip: {
-                backgroundColor: '#111827',
-                titleColor: '#fff',
-                bodyColor: '#ddd',
-                callbacks: {
-                    label: function(context) {
-                        return context.raw / 1000 + 'k';
-                    }
-                }
-            }
+    new Chart(document.getElementById('salesChart'), {
+        type: 'doughnut',
+        data: {
+            labels: salesData.map(i => i.name),
+            datasets: [{
+                data: salesData.map(i => i.value),
+                backgroundColor: salesData.map(i => i.color),
+                borderWidth: 0
+            }]
         },
-
-        scales: {
-
-            // X AXIS (DAYS)
-            x: {
-                grid: { display: false },
-                ticks: {
-                    color: '#9CA3AF',
-                    maxRotation: 0,
-                    autoSkip: true,
-                    maxTicksLimit: 8
-                }
-            },
-
-            // Y AXIS (LEFT ONLY)
-            y: {
-                beginAtZero: true,
-                max: 20000,
-
-                ticks: {
-                    stepSize: 5000,
-                    color: '#9CA3AF',
-                    callback: function(value) {
-                        return value / 1000 + 'k';
-                    }
-                },
-
-                grid: {
-                    color: 'rgba(255,255,255,0.05)'
+        options: {
+            responsive: true,
+            cutout: '65%',
+            plugins: {
+                legend: {
+                    display: false
                 }
             }
         }
-    };
-
-    new Chart(ctx, {
-        type: 'bar',
-        data: chartData,
-        options: chartOptions
     });
 </script>
+@endpush

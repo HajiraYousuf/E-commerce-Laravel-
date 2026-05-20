@@ -1,32 +1,3 @@
-{{-- resources/views/components/admin/overview/revenue-section.blade.php --}}
-
-@php
-$analytics = [
-    ['day' => 'Jan 1', 'revenue' => 32000, 'expenses' => 12000],
-    ['day' => 'Jan 2', 'revenue' => 40000, 'expenses' => 14000],
-    ['day' => 'Jan 3', 'revenue' => 52000, 'expenses' => 15000],
-    ['day' => 'Jan 4', 'revenue' => 60000, 'expenses' => 17000],
-    ['day' => 'Jan 5', 'revenue' => 85000, 'expenses' => 18000],
-    ['day' => 'Jan 6', 'revenue' => 70000, 'expenses' => 20000],
-    ['day' => 'Jan 7', 'revenue' => 49000, 'expenses' => 36000],
-    ['day' => 'Jan 8', 'revenue' => 58000, 'expenses' => 22000],
-    ['day' => 'Jan 9', 'revenue' => 66000, 'expenses' => 24000],
-    ['day' => 'Jan 10', 'revenue' => 72000, 'expenses' => 26000],
-    ['day' => 'Jan 11', 'revenue' => 83000, 'expenses' => 29000],
-    ['day' => 'Jan 12', 'revenue' => 78000, 'expenses' => 25000],
-    ['day' => 'Jan 13', 'revenue' => 72000, 'expenses' => 26000],
-    ['day' => 'Jan 14', 'revenue' => 68000, 'expenses' => 28000],
-    ['day' => 'Jan 15', 'revenue' => 61000, 'expenses' => 33000],
-];
-
-$totalRevenue = collect($analytics)->sum('revenue');
-$totalExpenses = collect($analytics)->sum('expenses');
-$netProfit = $totalRevenue - $totalExpenses;
-
-$labels = collect($analytics)->pluck('day');
-$revenues = collect($analytics)->pluck('revenue');
-$expenses = collect($analytics)->pluck('expenses');
-@endphp
 
 <div class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#081028] p-6 shadow-xl dark:shadow-2xl">
 

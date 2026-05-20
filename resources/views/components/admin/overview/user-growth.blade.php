@@ -1,22 +1,18 @@
 {{-- resources/views/components/admin/overview/user-growth.blade.php --}}
 
 @php
-$userGrowthData = [
-    ['day' => 'Jan 1', 'new_users' => 4200, 'returning_users' => 2100, 'growth_rate' => 42],
-    ['day' => 'Jan 3', 'new_users' => 3900, 'returning_users' => 1900, 'growth_rate' => 30],
-    ['day' => 'Jan 5', 'new_users' => 4100, 'returning_users' => 2200, 'growth_rate' => 55],
-    ['day' => 'Jan 7', 'new_users' => 3800, 'returning_users' => 1800, 'growth_rate' => 35],
-    ['day' => 'Jan 9', 'new_users' => 4000, 'returning_users' => 2000, 'growth_rate' => 45],
-    ['day' => 'Jan 11', 'new_users' => 3900, 'returning_users' => 1700, 'growth_rate' => 28],
-    ['day' => 'Jan 13', 'new_users' => 4050, 'returning_users' => 2100, 'growth_rate' => 60],
-    ['day' => 'Jan 15', 'new_users' => 3980, 'returning_users' => 1850, 'growth_rate' => 52],
-];
 
 $labels = collect($userGrowthData)->pluck('day');
+
 $newUsers = collect($userGrowthData)->pluck('new_users');
+
 $returningUsers = collect($userGrowthData)->pluck('returning_users');
+
 $growthRate = collect($userGrowthData)->pluck('growth_rate');
+
 @endphp
+
+
 <div class="rounded-3xl border border-slate-200 dark:border-white/10 
 bg-white dark:bg-[#081028] p-6 shadow-xl dark:shadow-2xl h-auto">
 
@@ -50,96 +46,94 @@ bg-white dark:bg-[#081028] p-6 shadow-xl dark:shadow-2xl h-auto">
 
         <div class="flex items-center gap-2">
             <div class="h-3 w-3 rounded-full bg-violet-500"></div>
-            <span class="text-sm text-slate-600 dark:text-slate-300">New Users</span>
+            <span class="text-sm text-slate-600 dark:text-slate-300">
+                New Users
+            </span>
         </div>
 
         <div class="flex items-center gap-2">
             <div class="h-3 w-3 rounded-full bg-blue-500"></div>
-            <span class="text-sm text-slate-600 dark:text-slate-300">Returning Users</span>
+            <span class="text-sm text-slate-600 dark:text-slate-300">
+                Returning Users
+            </span>
         </div>
 
         <div class="flex items-center gap-2">
             <div class="h-3 w-3 rounded-full bg-emerald-400"></div>
-            <span class="text-sm text-slate-600 dark:text-slate-300">Growth Rate</span>
+            <span class="text-sm text-slate-600 dark:text-slate-300">
+                Growth Rate
+            </span>
         </div>
 
     </div>
 
     {{-- CHART --}}
     <div class="h-auto">
+
         <canvas id="userGrowthChart"></canvas>
+
     </div>
 
 </div>
+
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+
+    const labels = @json($labels);
+    const newUsers = @json($newUsers);
+    const returningUsers = @json($returningUsers);
+    const growthRate = @json($growthRate);
 
     const ctx = document.getElementById('userGrowthChart');
 
     new Chart(ctx, {
 
         data: {
-
-            labels: @json($labels),
+            labels: labels,
 
             datasets: [
 
-               {
-    type: 'bar',
-    label: 'New Users',
-    data: @json($newUsers),
-
-    backgroundColor: '#8B5CF6',
-
-    borderRadius: 4,
-    borderSkipped: false,
-
-    // ❌ remove barThickness
-
-    categoryPercentage: 0.6, // 🔥 space between groups
-    barPercentage: 0.7,      // 🔥 space inside group
-
-    yAxisID: 'y'
-},
-
-{
-    type: 'bar',
-    label: 'Returning Users',
-    data: @json($returningUsers),
-
-    backgroundColor: '#3B82F6',
-
-    borderRadius: 4,
-    borderSkipped: false,
-
-    // ❌ remove barThickness
-
-    categoryPercentage: 0.6,
-    barPercentage: 0.7,
-
-    yAxisID: 'y'
-},
+                // NEW USERS
                 {
-    type: 'line',
-    label: 'Growth Rate',
-    data: @json($growthRate),
+                    type: 'bar',
+                    label: 'New Users',
+                    data: newUsers,
+                    backgroundColor: '#8B5CF6',
+                    borderRadius: 6,
+                    borderSkipped: false,
+                    categoryPercentage: 0.6,
+                    barPercentage: 0.7,
+                    yAxisID: 'y'
+                },
 
-    borderColor: '#22C55E',
-    backgroundColor: '#22C55E',
+                // RETURNING USERS
+                {
+                    type: 'bar',
+                    label: 'Returning Users',
+                    data: returningUsers,
+                    backgroundColor: '#3B82F6',
+                    borderRadius: 6,
+                    borderSkipped: false,
+                    categoryPercentage: 0.6,
+                    barPercentage: 0.7,
+                    yAxisID: 'y'
+                },
 
-    yAxisID: 'y1',
-
-    tension: 0.4,
-
-    borderWidth: 1.5, // 🔥 thin line
-
-    pointRadius: 2, // 🔥 small dots
-    pointHoverRadius: 4,
-
-    pointBackgroundColor: '#22C55E',
-
-    fill: false
-},
+                // GROWTH RATE
+                {
+                    type: 'line',
+                    label: 'Growth Rate',
+                    data: growthRate,
+                    borderColor: '#22C55E',
+                    backgroundColor: '#22C55E',
+                    yAxisID: 'y1',
+                    tension: 0.4,
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    fill: false
+                }
             ]
         },
 
@@ -152,52 +146,60 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 legend: {
                     display: false
+                },
+
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+
+                            // show % for growth rate
+                            if (context.dataset.label === 'Growth Rate') {
+                                return context.raw + '%';
+                            }
+
+                            return context.dataset.label + ': ' + context.raw;
+                        }
+                    }
                 }
             },
 
             scales: {
 
+                // X AXIS (DAYS)
                 x: {
-
                     ticks: {
-                        color: '#94A3B8'
+                        color: '#94A3B8',
+                        maxRotation: 0,
+                        autoSkip: true,
+                        maxTicksLimit: 7
                     },
-
                     grid: {
                         display: false
                     }
                 },
 
+                // LEFT Y AXIS (USERS COUNT)
                 y: {
-
                     beginAtZero: true,
-
                     ticks: {
-
-                        color: '#94A3B8',
-
-                        callback: function(value) {
-                            return value / 1000 + 'K';
-                        }
+                        color: '#94A3B8'
                     },
-
                     grid: {
-                        color: 'rgba(255,255,255,0.05)'
+                        color: 'rgba(148, 163, 184, 0.1)'
                     }
                 },
 
+                // RIGHT Y AXIS (GROWTH %)
                 y1: {
-
                     position: 'right',
+                    beginAtZero: false,
 
-                    beginAtZero: true,
-
-                    max: 100,
+                    // FIX: dynamic scaling (IMPORTANT)
+                    suggestedMin: Math.min(...growthRate) - 10,
+                    suggestedMax: Math.max(...growthRate) + 10,
 
                     ticks: {
-
                         color: '#94A3B8',
-
                         callback: function(value) {
                             return value + '%';
                         }
