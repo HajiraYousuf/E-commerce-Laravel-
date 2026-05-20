@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activity;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -29,7 +30,15 @@ class AuthController extends Controller
             'password' => Hash::make($validated['password']),
             'role' => 'user',
         ]);
-
+        Activity::create([
+    'user_id' => $user->id,
+    'email' => $user->email, 
+    'action' => 'user_registered',
+    'module' => 'users',
+    'status' => 'success',
+    'date' => now()->toDateString(),
+    'time' => now()->toTimeString(),
+]);
         Auth::login($user);
 
         return redirect()->route('dashboard');

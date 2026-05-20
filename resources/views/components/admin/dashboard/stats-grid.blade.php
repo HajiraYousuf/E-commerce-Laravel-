@@ -1,44 +1,16 @@
-@php
-    $stats = [
-    [
-        "title" => "Total Revenue",
-        "value" => "$124,563",
-        "change" => "+12.5%",
-        "trend" => "up",
-        "type" => "revenue",
-        "color" => "emerald",
-    ],
-    [
-        "title" => "Active Users",
-        "value" => "8,549",
-        "change" => "+8.2%",
-        "trend" => "up",
-        "type" => "users",
-        "color" => "blue",
-    ],
-    [
-        "title" => "Total Orders",
-        "value" => "2,847",
-        "change" => "+15.3%",
-        "trend" => "up",
-        "type" => "orders",
-        "color" => "purple",
-    ],
-    [
-        "title" => "Page Views",
-        "value" => "45,892",
-        "change" => "-2.1%",
-        "trend" => "down",
-        "type" => "views",
-        "color" => "orange",
-    ],
-];
-@endphp
 <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
 
 @foreach($stats as $stat)
 
 @php
+    // convert "12.5%" -> 12.5
+    $changeValue = (float) str_replace('%', '', $stat['change']);
+
+    // normalize for progress bar (0 - 100)
+    $progress = min(100, abs($changeValue));
+
+    // minimum visible bar
+    $progress = $progress < 5 ? 5 : $progress;
     $isUp = $stat['trend'] === 'up';
 
     $icons = [
@@ -107,12 +79,11 @@
     {{-- Progress bar --}}
     <div class="mt-4 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
 
-        <div class="h-full bg-gradient-to-r {{ $color }} rounded-full transition-all duration-300"
-             style="width: {{ $isUp ? '75%' : '45%' }}">
-        </div>
-
+    <div class="h-full bg-gradient-to-r {{ $color }} rounded-full transition-all duration-300"
+         style="width: {{ $progress }}%">
     </div>
 
+</div>
 </div>
 
 @endforeach

@@ -2,9 +2,10 @@
 
 <div class="space-y-6">
 
-    {{-- PASSWORD --}}
+    {{-- PASSWORD SETTINGS --}}
     <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-3xl p-6">
 
+        {{-- HEADER --}}
         <div class="mb-8">
 
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
@@ -17,9 +18,25 @@
 
         </div>
 
+        {{-- SUCCESS MESSAGE --}}
+        @if(session('success'))
 
+            <div class="mb-6 p-4 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
 
-        <form class="space-y-6">
+                {{ session('success') }}
+
+            </div>
+
+        @endif
+
+        {{-- FORM --}}
+        <form
+            action="{{ route('settings.password') }}"
+            method="POST"
+            class="space-y-6"
+        >
+
+            @csrf
 
             {{-- CURRENT PASSWORD --}}
             <div>
@@ -31,14 +48,18 @@
                 <div class="relative">
 
                     <input
+                        id="currentPassword"
                         type="password"
+                        name="current_password"
                         placeholder="Enter current password"
                         class="w-full h-12 pl-4 pr-12 rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500"
                     >
 
                     <button
                         type="button"
-                        class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-300">
+                        onclick="togglePassword('currentPassword', this)"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-300"
+                    >
 
                         <i class="ri-eye-line text-lg"></i>
 
@@ -46,9 +67,15 @@
 
                 </div>
 
+                @error('current_password')
+
+                    <p class="text-red-500 text-sm mt-2">
+                        {{ $message }}
+                    </p>
+
+                @enderror
+
             </div>
-
-
 
             {{-- NEW PASSWORD --}}
             <div>
@@ -60,14 +87,18 @@
                 <div class="relative">
 
                     <input
+                        id="password"
                         type="password"
+                        name="password"
                         placeholder="Enter new password"
                         class="w-full h-12 pl-4 pr-12 rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500"
                     >
 
                     <button
                         type="button"
-                        class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-300">
+                        onclick="togglePassword('password', this)"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-300"
+                    >
 
                         <i class="ri-eye-line text-lg"></i>
 
@@ -75,9 +106,15 @@
 
                 </div>
 
+                @error('password')
+
+                    <p class="text-red-500 text-sm mt-2">
+                        {{ $message }}
+                    </p>
+
+                @enderror
+
             </div>
-
-
 
             {{-- CONFIRM PASSWORD --}}
             <div>
@@ -89,14 +126,18 @@
                 <div class="relative">
 
                     <input
+                        id="confirmPassword"
                         type="password"
+                        name="password_confirmation"
                         placeholder="Confirm new password"
                         class="w-full h-12 pl-4 pr-12 rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500"
                     >
 
                     <button
                         type="button"
-                        class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-300">
+                        onclick="togglePassword('confirmPassword', this)"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-300"
+                    >
 
                         <i class="ri-eye-line text-lg"></i>
 
@@ -105,8 +146,6 @@
                 </div>
 
             </div>
-
-
 
             {{-- PASSWORD STRENGTH --}}
             <div>
@@ -117,37 +156,56 @@
                         Password Strength
                     </span>
 
-                    <span class="text-sm font-semibold text-emerald-600">
-                        Strong
+                    <span
+                        id="strengthText"
+                        class="text-sm font-semibold text-gray-500"
+                    >
+                        Weak
                     </span>
 
                 </div>
 
                 <div class="w-full h-2 rounded-full bg-gray-200 dark:bg-slate-700 overflow-hidden">
 
-                    <div class="w-[85%] h-full bg-emerald-500 rounded-full"></div>
+                    <div
+                        id="strengthBar"
+                        class="h-full w-[10%] bg-red-500 transition-all duration-300 rounded-full"
+                    ></div>
 
                 </div>
 
+                {{-- RULES --}}
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
 
-                    <div class="flex items-center gap-2 text-sm text-emerald-600">
-                        <i class="ri-check-line"></i>
+                    <div
+                        id="ruleLength"
+                        class="flex items-center gap-2 text-sm text-gray-400"
+                    >
+                        <i class="ri-close-line"></i>
                         8+ Characters
                     </div>
 
-                    <div class="flex items-center gap-2 text-sm text-emerald-600">
-                        <i class="ri-check-line"></i>
+                    <div
+                        id="ruleUpper"
+                        class="flex items-center gap-2 text-sm text-gray-400"
+                    >
+                        <i class="ri-close-line"></i>
                         Uppercase
                     </div>
 
-                    <div class="flex items-center gap-2 text-sm text-emerald-600">
-                        <i class="ri-check-line"></i>
+                    <div
+                        id="ruleNumber"
+                        class="flex items-center gap-2 text-sm text-gray-400"
+                    >
+                        <i class="ri-close-line"></i>
                         Number
                     </div>
 
-                    <div class="flex items-center gap-2 text-sm text-emerald-600">
-                        <i class="ri-check-line"></i>
+                    <div
+                        id="ruleSymbol"
+                        class="flex items-center gap-2 text-sm text-gray-400"
+                    >
+                        <i class="ri-close-line"></i>
                         Symbol
                     </div>
 
@@ -155,14 +213,13 @@
 
             </div>
 
-
-
             {{-- BUTTON --}}
             <div class="flex justify-end pt-2">
 
                 <button
                     type="submit"
-                    class="px-8 h-12 rounded-2xl bg-indigo-600 hover:bg-indigo-700 transition text-white font-medium shadow-lg shadow-indigo-500/20">
+                    class="px-8 h-12 rounded-2xl bg-indigo-600 hover:bg-indigo-700 transition text-white font-medium shadow-lg shadow-indigo-500/20"
+                >
 
                     Update Password
 
@@ -174,225 +231,147 @@
 
     </div>
 
-
-    {{-- <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-3xl p-6">
-
-        <div class="flex items-start justify-between gap-5">
-
-            <div>
-
-                <div class="flex items-center gap-3 mb-2">
-
-                    <div class="w-12 h-12 rounded-2xl bg-indigo-100 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
-
-                        <i class="ri-shield-keyhole-line text-xl"></i>
-
-                    </div>
-
-                    <div>
-
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">
-                            Two-Factor Authentication
-                        </h3>
-
-                        <p class="text-sm text-gray-500 dark:text-slate-400">
-                            Add extra protection to your account
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <label class="relative inline-flex cursor-pointer items-center">
-
-                <input type="checkbox" class="peer sr-only">
-
-                <div class="peer h-7 w-12 rounded-full bg-gray-300 dark:bg-slate-700 after:absolute after:left-1 after:top-1 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all peer-checked:bg-indigo-600 peer-checked:after:translate-x-5"></div>
-
-            </label>
-
-        </div>
-
-
-
-        <div class="mt-8">
-
-            <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-4">
-                Trusted Devices
-            </h4>
-
-            <div class="space-y-4">
-
-                <div class="flex items-center justify-between p-4 rounded-2xl border border-gray-200 dark:border-slate-700">
-
-                    <div class="flex items-center gap-4">
-
-                        <div class="w-12 h-12 rounded-2xl bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-600 dark:text-slate-300">
-
-                            <i class="ri-macbook-line text-xl"></i>
-
-                        </div>
-
-                        <div>
-
-                            <h5 class="font-semibold text-gray-900 dark:text-white">
-                                MacBook Pro
-                            </h5>
-
-                            <p class="text-sm text-gray-500 dark:text-slate-400">
-                                Chrome • New York, USA
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                    <span class="text-sm font-medium text-emerald-600">
-                        Current Device
-                    </span>
-
-                </div>
-
-
-
-                <div class="flex items-center justify-between p-4 rounded-2xl border border-gray-200 dark:border-slate-700">
-
-                    <div class="flex items-center gap-4">
-
-                        <div class="w-12 h-12 rounded-2xl bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-600 dark:text-slate-300">
-
-                            <i class="ri-smartphone-line text-xl"></i>
-
-                        </div>
-
-                        <div>
-
-                            <h5 class="font-semibold text-gray-900 dark:text-white">
-                                iPhone 15 Pro
-                            </h5>
-
-                            <p class="text-sm text-gray-500 dark:text-slate-400">
-                                Safari • California, USA
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                    <button
-                        class="text-red-500 hover:text-red-600 text-sm font-medium">
-
-                        Remove
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-    <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-3xl p-6">
-
-        <div class="flex items-center justify-between mb-6">
-
-            <div>
-
-                <h3 class="text-xl font-bold text-gray-900 dark:text-white">
-                    Recent Login Activity
-                </h3>
-
-                <p class="text-gray-500 dark:text-slate-400 text-sm mt-1">
-                    Monitor your recent account activity
-                </p>
-
-            </div>
-
-            <button
-                class="h-11 px-5 rounded-2xl border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition">
-
-                View All
-
-            </button>
-
-        </div>
-
-
-
-        <div class="space-y-4">
-
-            <div class="flex items-center justify-between p-4 rounded-2xl bg-gray-50 dark:bg-slate-800">
-
-                <div class="flex items-center gap-4">
-
-                    <div class="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
-
-                        <i class="ri-check-line text-xl"></i>
-
-                    </div>
-
-                    <div>
-
-                        <h4 class="font-semibold text-gray-900 dark:text-white">
-                            Successful Login
-                        </h4>
-
-                        <p class="text-sm text-gray-500 dark:text-slate-400">
-                            Chrome on Windows • 2 mins ago
-                        </p>
-
-                    </div>
-
-                </div>
-
-                <span class="text-sm text-gray-500 dark:text-slate-400">
-                    Hargeisa, Somalia
-                </span>
-
-            </div>
-
-
-
-            <div class="flex items-center justify-between p-4 rounded-2xl bg-gray-50 dark:bg-slate-800">
-
-                <div class="flex items-center gap-4">
-
-                    <div class="w-12 h-12 rounded-2xl bg-red-100 dark:bg-red-500/10 text-red-600 flex items-center justify-center">
-
-                        <i class="ri-close-line text-xl"></i>
-
-                    </div>
-
-                    <div>
-
-                        <h4 class="font-semibold text-gray-900 dark:text-white">
-                            Failed Login Attempt
-                        </h4>
-
-                        <p class="text-sm text-gray-500 dark:text-slate-400">
-                            Firefox on Linux • 1 hour ago
-                        </p>
-
-                    </div>
-
-                </div>
-
-                <span class="text-sm text-gray-500 dark:text-slate-400">
-                    London, UK
-                </span>
-
-            </div>
-
-        </div>
-
-    </div> --}}
-
 </div>
+
+{{-- SCRIPT --}}
+<script>
+
+    // TOGGLE PASSWORD
+    function togglePassword(id, button)
+    {
+        const input = document.getElementById(id);
+        const icon = button.querySelector('i');
+
+        if(input.type === 'password')
+        {
+            input.type = 'text';
+
+            icon.classList.remove('ri-eye-line');
+            icon.classList.add('ri-eye-off-line');
+        }
+        else
+        {
+            input.type = 'password';
+
+            icon.classList.remove('ri-eye-off-line');
+            icon.classList.add('ri-eye-line');
+        }
+    }
+
+    // PASSWORD STRENGTH
+    const password = document.getElementById('password');
+
+    const strengthBar = document.getElementById('strengthBar');
+    const strengthText = document.getElementById('strengthText');
+
+    const ruleLength = document.getElementById('ruleLength');
+    const ruleUpper = document.getElementById('ruleUpper');
+    const ruleNumber = document.getElementById('ruleNumber');
+    const ruleSymbol = document.getElementById('ruleSymbol');
+
+    password.addEventListener('input', () => {
+
+        let value = password.value;
+
+        let strength = 0;
+
+        // LENGTH
+        if(value.length >= 8)
+        {
+            strength++;
+            activateRule(ruleLength);
+        }
+        else
+        {
+            deactivateRule(ruleLength);
+        }
+
+        // UPPERCASE
+        if(/[A-Z]/.test(value))
+        {
+            strength++;
+            activateRule(ruleUpper);
+        }
+        else
+        {
+            deactivateRule(ruleUpper);
+        }
+
+        // NUMBER
+        if(/[0-9]/.test(value))
+        {
+            strength++;
+            activateRule(ruleNumber);
+        }
+        else
+        {
+            deactivateRule(ruleNumber);
+        }
+
+        // SYMBOL
+        if(/[^A-Za-z0-9]/.test(value))
+        {
+            strength++;
+            activateRule(ruleSymbol);
+        }
+        else
+        {
+            deactivateRule(ruleSymbol);
+        }
+
+        // LEVELS
+        if(strength <= 1)
+        {
+            strengthBar.style.width = '25%';
+            strengthBar.className = 'h-full bg-red-500 transition-all duration-300 rounded-full';
+
+            strengthText.innerText = 'Weak';
+            strengthText.className = 'text-sm font-semibold text-red-500';
+        }
+
+        else if(strength == 2)
+        {
+            strengthBar.style.width = '50%';
+            strengthBar.className = 'h-full bg-yellow-500 transition-all duration-300 rounded-full';
+
+            strengthText.innerText = 'Medium';
+            strengthText.className = 'text-sm font-semibold text-yellow-500';
+        }
+
+        else if(strength == 3)
+        {
+            strengthBar.style.width = '75%';
+            strengthBar.className = 'h-full bg-blue-500 transition-all duration-300 rounded-full';
+
+            strengthText.innerText = 'Good';
+            strengthText.className = 'text-sm font-semibold text-blue-500';
+        }
+
+        else
+        {
+            strengthBar.style.width = '100%';
+            strengthBar.className = 'h-full bg-emerald-500 transition-all duration-300 rounded-full';
+
+            strengthText.innerText = 'Strong';
+            strengthText.className = 'text-sm font-semibold text-emerald-500';
+        }
+
+    });
+
+    function activateRule(element)
+    {
+        element.classList.remove('text-gray-400');
+        element.classList.add('text-emerald-600');
+
+        element.querySelector('i').className = 'ri-check-line';
+    }
+
+    function deactivateRule(element)
+    {
+        element.classList.remove('text-emerald-600');
+        element.classList.add('text-gray-400');
+
+        element.querySelector('i').className = 'ri-close-line';
+    }
+
+</script>

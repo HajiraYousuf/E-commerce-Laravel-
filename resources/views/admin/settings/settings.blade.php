@@ -92,7 +92,7 @@
 
         @if($tab == 'profile')
 
-            <x-admin.settings.profile />
+            <x-admin.settings.profile :user="$user"/>
 
         @elseif($tab == 'security')
 

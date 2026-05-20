@@ -20,7 +20,8 @@
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 
                 rounded-3xl shadow-lg p-6 md:p-10">
 
-        <form action="{{ route('category.store') }}" method="POST" enctype="multipart/form-data">
+        <!-- FIXED ROUTE -->
+        <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <!-- GRID -->
@@ -95,7 +96,8 @@
             <!-- Buttons -->
             <div class="mt-10 flex flex-col md:flex-row gap-3 md:justify-end">
 
-                <a href="{{ route('admin.categories') }}"
+                <!-- FIXED ROUTE -->
+                <a href="{{ route('categories.index') }}"
                    class="px-6 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 
                           text-slate-700 dark:text-white text-center
                           hover:scale-105 transition">

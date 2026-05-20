@@ -1,31 +1,6 @@
 @php
-$calendarDays = range(1,31);
-
-$events = [
-    [
-        'title' => 'Project Meeting',
-        'desc' => 'Discuss project roadmap and milestones',
-        'start' => '10:00 AM',
-        'end' => '11:00 AM',
-        'color' => 'bg-violet-500',
-    ],
-    [
-        'title' => 'UI/UX Review',
-        'desc' => 'Review new designs and prototypes',
-        'start' => '01:00 PM',
-        'end' => '02:30 PM',
-        'color' => 'bg-green-500',
-    ],
-    [
-        'title' => 'Team Standup',
-        'desc' => 'Daily update and tasks',
-        'start' => '04:00 PM',
-        'end' => '04:30 PM',
-        'color' => 'bg-orange-400',
-    ],
-];
+    use Carbon\Carbon;
 @endphp
-
 
 <div class="bg-white dark:bg-[#0D1320] border border-gray-200 dark:border-white/10 
     rounded-3xl p-4 sm:p-5 h-full space-y-6 transition-colors duration-300">
@@ -37,7 +12,7 @@ $events = [
         <div class="flex items-center justify-between mb-4">
 
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                May 2025
+                {{ $date->format('F Y') }}
             </h3>
 
             <span class="text-xs text-gray-500 dark:text-gray-400">
@@ -63,6 +38,12 @@ $events = [
 
             @foreach($calendarDays as $day)
 
+                @php
+                    $hasEvent = $events->contains(function ($event) use ($day, $date) {
+                        return Carbon::parse($event->date)->day == $day;
+                    });
+                @endphp
+
                 <div class="flex justify-center">
 
                     <div class="
@@ -71,10 +52,7 @@ $events = [
 
                         hover:bg-gray-200 dark:hover:bg-white/10
 
-                        {{ $day == 15 
-                            ? 'bg-violet-600 text-white shadow-md' 
-                            : 'text-gray-700 dark:text-gray-300' 
-                        }}
+                        {{ $hasEvent ? 'bg-violet-600 text-white shadow-md' : 'text-gray-700 dark:text-gray-300' }}
                     ">
                         {{ $day }}
                     </div>
@@ -88,7 +66,7 @@ $events = [
     </div>
 
 
-    {{-- EVENTS --}}
+    {{-- EVENTS LIST --}}
     <div>
 
         <div class="flex items-center justify-between mb-4">
@@ -105,33 +83,39 @@ $events = [
 
         <div class="space-y-5">
 
-            @foreach($events as $event)
+            @forelse($events as $event)
 
                 <div class="flex items-start gap-4 group">
 
                     {{-- DOT --}}
-                    <span class="w-3 h-3 rounded-full mt-2 {{ $event['color'] }}"></span>
+                    <span class="w-3 h-3 rounded-full mt-2 {{ $event->color }}"></span>
 
                     {{-- CONTENT --}}
                     <div class="flex-1">
 
                         <h4 class="font-medium text-gray-900 dark:text-white group-hover:text-violet-400 transition">
-                            {{ $event['title'] }}
+                            {{ $event->title }}
                         </h4>
 
                         <p class="text-sm text-gray-500 dark:text-gray-400">
-                            {{ $event['start'] }} - {{ $event['end'] }}
+                            {{ $event->start }} - {{ $event->end }}
                         </p>
 
                         <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                            {{ $event['desc'] }}
+                            {{ $event->desc }}
                         </p>
 
                     </div>
 
                 </div>
 
-            @endforeach
+            @empty
+
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                    No events this month.
+                </p>
+
+            @endforelse
 
         </div>
 

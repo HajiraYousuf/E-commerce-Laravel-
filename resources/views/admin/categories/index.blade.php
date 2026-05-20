@@ -6,12 +6,19 @@
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
 
         <div>
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Categories</h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400">E-Commerce Categories</p>
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-white">
+                Categories
+            </h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+                E-Commerce Categories
+            </p>
         </div>
 
-        <a href="#"
-           class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700  text-white rounded-xl shadow transition duration-300">
+        <!-- FIXED ROUTE -->
+        <a href="{{ route('categories.create') }}"
+           class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 
+                  hover:from-blue-700 hover:to-purple-700 text-white 
+                  rounded-xl shadow transition duration-300">
             + Add Category
         </a>
 
@@ -51,57 +58,62 @@
 
                 <tr class="border-b border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
 
-                    <!-- Image -->
+                    <!-- IMAGE FIXED -->
                     <td class="px-6 py-4">
-                        <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center">
-                            <span class="text-indigo-600 font-bold">
-                                {{ strtoupper(substr($category->name,0,1)) }}
-                            </span>
-                        </div>
+                        @if($category->image)
+                            <img src="{{ asset('storage/'.$category->image) }}"
+                                 class="w-10 h-10 rounded-lg object-cover">
+                        @else
+                            <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center">
+                                <span class="text-indigo-600 font-bold">
+                                    {{ strtoupper(substr($category->name,0,1)) }}
+                                </span>
+                            </div>
+                        @endif
                     </td>
 
-                    <!-- Name -->
+                    <!-- NAME -->
                     <td class="px-6 py-4 font-semibold">
                         {{ $category->name }}
                     </td>
 
-                    <!-- Description -->
+                    <!-- DESCRIPTION -->
                     <td class="px-6 py-4 text-gray-500">
                         {{ $category->description ?? 'No description' }}
                     </td>
 
-                    <!-- Slug -->
+                    <!-- SLUG -->
                     <td class="px-6 py-4 text-gray-400">
                         {{ $category->slug }}
                     </td>
 
-                    <!-- Products -->
+                    <!-- PRODUCTS -->
                     <td class="px-6 py-4">
                         <span class="px-2 py-1 text-xs bg-green-100 text-green-600 rounded-full">
                             {{ $category->products_count ?? 0 }}
                         </span>
                     </td>
 
-                    <!-- Actions -->
+                    <!-- ACTIONS -->
                     <td class="px-6 py-4 text-right">
 
                         <div class="flex justify-end gap-2">
 
-                            <!-- View -->
-                            <a href="#"
+                            <!-- VIEW FIXED -->
+                            <a href="{{ route('categories.show', $category->id) }}"
                                class="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg transition"
                                title="View">
                                 👁
                             </a>
 
-                            <!-- Edit -->
+                            <!-- EDIT -->
                             <a href="{{ route('categories.edit', $category->id) }}"
                                class="p-2 bg-yellow-100 hover:bg-yellow-200 text-yellow-600 rounded-lg transition"
                                title="Edit">
                                 ✏️
                             </a>
 
-                            <!-- Delete -->
+                            <!-- DELETE -->
                             <form action="{{ route('categories.destroy', $category->id) }}"
                                   method="POST"
                                   onsubmit="return confirm('Delete this category?')">

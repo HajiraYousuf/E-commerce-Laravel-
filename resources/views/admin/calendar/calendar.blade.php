@@ -9,13 +9,9 @@
 
             {{-- CALENDAR --}}
             <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm">
-                <x-admin.calendar.main-calendar :calendarDays="$calendarDays" />
-            </div>
+                <x-admin.calendar.main-calendar :date="$date" :calendarDays="$calendarDays" :groupedEvents="$groupedEvents" :events="$events" :selectedDay="$selectedDay ?? now()->day"
+ />            </div>
 
-            {{-- EVENTS --}}
-            <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm">
-                <x-admin.calendar.events :events="$events" />
-            </div>
 
         </div>
 
@@ -23,10 +19,7 @@
         <div class="xl:col-span-4">
 
             <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm">
-                <x-admin.calendar.mini-calendar 
-                    :calendarDays="$calendarDays"
-                    :events="$events"
-                />
+                <x-admin.calendar.mini-calendar :date="$date" :events="$events" :calendarDays="$calendarDays" :selectedDay="$selectedDay ?? now()->day"/>
             </div>
 
         </div>

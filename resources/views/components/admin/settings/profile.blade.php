@@ -1,19 +1,3 @@
-@php
-
-$user = [
-    'name' => 'Angelina',
-    'username' => 'Gotelli',
-    'email' => 'carolyn_h@hotmail.com',
-    'phone' => '121231234',
-    'country' => 'United States',
-    'address' => '123 Main St',
-    'city' => 'New York',
-    'postal' => '10001',
-    'image' => 'https://i.pravatar.cc/150?img=32',
-];
-
-@endphp
-
 <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-3xl p-6">
 
     {{-- HEADER --}}
@@ -30,9 +14,17 @@ $user = [
     </div>
 
 
+    @if(session('success'))
 
+    <div class="mb-6 p-4 rounded-2xl bg-green-100 text-green-700 border border-green-200">
+
+        {{ session('success') }}
+
+    </div>
+
+@endif
     {{-- FORM --}}
-    <form action="#" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('settings.profile') }}" method="POST" enctype="multipart/form-data">
 
         @csrf
 
@@ -40,8 +32,7 @@ $user = [
         <div class="flex items-center gap-5 mb-8">
 
             <img
-                src="{{ $user['image'] }}"
-                class="w-24 h-24 rounded-3xl object-cover border border-gray-200 dark:border-slate-700"
+            src="{{ $user->image ? asset('storage/'.$user->image) : 'https://i.pravatar.cc/150' }}"                class="w-24 h-24 rounded-3xl object-cover border border-gray-200 dark:border-slate-700"
             >
 
             <div class="flex flex-col gap-3">
@@ -224,7 +215,7 @@ $user = [
                 <input
                     type="text"
                     name="postal_code"
-                    value="{{ old('postal_code',$user['postal']) }}"
+                    value="{{ old('postal_code',$user['postal_code']) }}"
                     class="w-full h-12 px-4 rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500"
                 >
 

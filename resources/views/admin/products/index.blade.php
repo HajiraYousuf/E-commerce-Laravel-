@@ -1,57 +1,5 @@
 <x-layouts.app>
 
-@php
-
-$products = [
-
-[
-'image'=>'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400',
-'name'=>'Nike Air Max',
-'sku'=>'PRD-1001',
-'category'=>'Fashion',
-'price'=>'$120',
-'stock'=>42,
-'status'=>'Active',
-'sales'=>184,
-],
-
-[
-'image'=>'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=400',
-'name'=>'iPhone 15 Pro',
-'sku'=>'PRD-1002',
-'category'=>'Electronics',
-'price'=>'$999',
-'stock'=>12,
-'status'=>'Low Stock',
-'sales'=>94,
-],
-
-[
-'image'=>'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=400',
-'name'=>'Wireless Headphones',
-'sku'=>'PRD-1003',
-'category'=>'Electronics',
-'price'=>'$85',
-'stock'=>0,
-'status'=>'Out of Stock',
-'sales'=>211,
-],
-
-[
-'image'=>'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=400',
-'name'=>'Smart Watch',
-'sku'=>'PRD-1004',
-'category'=>'Accessories',
-'price'=>'$220',
-'stock'=>18,
-'status'=>'Active',
-'sales'=>73,
-],
-
-];
-
-@endphp
-
 <div class="space-y-6">
 
     {{-- HEADER --}}
@@ -69,13 +17,13 @@ $products = [
 
         </div>
 
-        <button class="h-11 px-5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition flex items-center gap-2 w-fit">
+        <a href="{{ route('products.create') }}"
+           class="h-11 px-5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition flex items-center gap-2 w-fit">
 
             <i class="ri-add-line"></i>
-
             Add Product
 
-        </button>
+        </a>
 
     </div>
 
@@ -87,7 +35,6 @@ $products = [
             {{-- LEFT --}}
             <div class="flex flex-wrap items-center gap-3">
 
-                {{-- CATEGORY --}}
                 <div class="relative">
 
                     <select class="h-11 min-w-[170px] rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-4 pr-10 text-sm font-medium text-gray-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500 appearance-none">
@@ -103,7 +50,6 @@ $products = [
 
                 </div>
 
-                {{-- STATUS --}}
                 <div class="relative">
 
                     <select class="h-11 min-w-[170px] rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-4 pr-10 text-sm font-medium text-gray-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500 appearance-none">
@@ -124,7 +70,6 @@ $products = [
             {{-- RIGHT --}}
             <div class="flex items-center gap-3">
 
-                {{-- SEARCH --}}
                 <div class="relative w-full sm:w-[280px]">
 
                     <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
@@ -137,11 +82,9 @@ $products = [
 
                 </div>
 
-                {{-- EXPORT --}}
                 <button class="h-11 px-5 rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 text-sm font-medium text-gray-700 dark:text-slate-200 transition flex items-center gap-2 whitespace-nowrap">
 
                     <i class="ri-download-2-line"></i>
-
                     Export
 
                 </button>
@@ -197,7 +140,17 @@ $products = [
 
                 <tbody class="divide-y divide-gray-200 dark:divide-slate-800">
 
-                    @foreach($products as $product)
+                    @forelse($products as $product)
+
+                    @php
+                        $status = 'Active';
+
+                        if ($product->stock == 0) {
+                            $status = 'Out of Stock';
+                        } elseif ($product->stock < 10) {
+                            $status = 'Low Stock';
+                        }
+                    @endphp
 
                     <tr class="hover:bg-gray-50 dark:hover:bg-slate-800/40 transition">
 
@@ -207,18 +160,18 @@ $products = [
                             <div class="flex items-center gap-4">
 
                                 <img
-                                    src="{{ $product['image'] }}"
+                                    src="{{ $product->image ? asset('storage/'.$product->image) : 'https://via.placeholder.com/100' }}"
                                     class="w-16 h-16 rounded-2xl object-cover border border-gray-200 dark:border-slate-700"
                                 >
 
                                 <div>
 
                                     <h3 class="font-semibold text-gray-900 dark:text-white">
-                                        {{ $product['name'] }}
+                                        {{ $product->name }}
                                     </h3>
 
                                     <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">
-                                        SKU: {{ $product['sku'] }}
+                                        SKU: {{ $product->sku }}
                                     </p>
 
                                 </div>
@@ -231,7 +184,7 @@ $products = [
                         <td class="px-6 py-5">
 
                             <span class="inline-flex items-center px-3 py-1.5 rounded-xl bg-indigo-100 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 text-xs font-semibold">
-                                {{ $product['category'] }}
+                                {{ $product->category }}
                             </span>
 
                         </td>
@@ -240,7 +193,7 @@ $products = [
                         <td class="px-6 py-5">
 
                             <span class="font-semibold text-gray-900 dark:text-white">
-                                {{ $product['price'] }}
+                                ${{ number_format($product->price, 2) }}
                             </span>
 
                         </td>
@@ -249,7 +202,7 @@ $products = [
                         <td class="px-6 py-5">
 
                             <span class="text-sm font-medium text-gray-700 dark:text-slate-300">
-                                {{ $product['stock'] }} items
+                                {{ $product->stock }} items
                             </span>
 
                         </td>
@@ -258,7 +211,7 @@ $products = [
                         <td class="px-6 py-5">
 
                             <span class="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
-                                {{ $product['sales'] }} sold
+                                {{ $product->sales ?? 0 }} sold
                             </span>
 
                         </td>
@@ -266,14 +219,14 @@ $products = [
                         {{-- STATUS --}}
                         <td class="px-6 py-5">
 
-                            @if($product['status'] == 'Active')
+                            @if($status == 'Active')
 
                             <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-100 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
                                 <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
                                 Active
                             </span>
 
-                            @elseif($product['status'] == 'Low Stock')
+                            @elseif($status == 'Low Stock')
 
                             <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-100 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 text-xs font-semibold">
                                 <span class="w-2 h-2 rounded-full bg-amber-500"></span>
@@ -296,17 +249,27 @@ $products = [
 
                             <div class="flex items-center justify-center gap-2">
 
-                                <button class="w-10 h-10 rounded-xl bg-gray-100 hover:bg-indigo-100 dark:bg-slate-800 dark:hover:bg-indigo-500/10 text-gray-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+                                <a href="{{ route('products.show', $product->id) }}"
+                                   class="w-10 h-10 rounded-xl bg-gray-100 hover:bg-indigo-100 dark:bg-slate-800 dark:hover:bg-indigo-500/10 flex items-center justify-center text-gray-600 hover:text-indigo-600 transition">
                                     <i class="ri-eye-line"></i>
-                                </button>
+                                </a>
 
-                                <button class="w-10 h-10 rounded-xl bg-gray-100 hover:bg-blue-100 dark:bg-slate-800 dark:hover:bg-blue-500/10 text-gray-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition">
+                                <a href="{{ route('products.edit', $product->id) }}"
+                                   class="w-10 h-10 rounded-xl bg-gray-100 hover:bg-blue-100 dark:bg-slate-800 dark:hover:bg-blue-500/10 flex items-center justify-center text-gray-600 hover:text-blue-600 transition">
                                     <i class="ri-pencil-line"></i>
-                                </button>
+                                </a>
 
-                                <button class="w-10 h-10 rounded-xl bg-gray-100 hover:bg-red-100 dark:bg-slate-800 dark:hover:bg-red-500/10 text-gray-600 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 transition">
-                                    <i class="ri-delete-bin-6-line"></i>
-                                </button>
+                                <form action="{{ route('products.destroy', $product->id) }}" method="POST" 
+                                    onsubmit="return confirm('Are you sure you want to delete this product?')">>
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit"
+                                        class="w-10 h-10 rounded-xl bg-gray-100 hover:bg-red-100 dark:bg-slate-800 dark:hover:bg-red-500/10 text-gray-600 hover:text-red-600 transition">
+                                        <i class="ri-delete-bin-6-line"></i>
+                                    </button>
+
+                                </form>
 
                             </div>
 
@@ -314,7 +277,15 @@ $products = [
 
                     </tr>
 
-                    @endforeach
+                    @empty
+
+                    <tr>
+                        <td colspan="7" class="text-center py-10 text-gray-500">
+                            No products found
+                        </td>
+                    </tr>
+
+                    @endforelse
 
                 </tbody>
 

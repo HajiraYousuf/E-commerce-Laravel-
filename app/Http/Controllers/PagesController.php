@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activity;
 use Illuminate\Http\Request;
+use App\Models\Product;
 
 class PagesController extends Controller
 {
@@ -20,7 +22,19 @@ class PagesController extends Controller
         return view('admin.dashboards.insights');
     }
     public function inventroy(){
-        return view('admin.inventory.inventory');
+    $totalProducts = Product::count();
+    $inStock = Product::where('stock', '>', 10)->count();
+    $lowStock = Product::whereBetween('stock', [1, 10])->count();
+    $outStock = Product::where('stock', 0)->count();
+    $products = Product::latest()->get(); // 🔥 THIS WAS MISSING
+
+    return view('admin.inventory.inventory', compact(
+        'totalProducts',
+        'inStock',
+        'lowStock',
+        'outStock',
+        'products'
+    ));
     }
     public function transaction(){
         return view('admin.transaction.transaction');
@@ -34,19 +48,51 @@ class PagesController extends Controller
     public function messages(){
         return view('admin.messages.messages');
     }
-    public function products(){
-        return view('admin.products.index');
-    }
+    
     
     public function users(){
         return view('admin.users.index');
     }
-    
-    public function roles_perm(){
-        return view('admin.users.roles-perm');
+        
+   public function user_activity(Request $request)
+{
+    $query = Activity::query();
+
+    // SEARCH (clean + reusable)
+    if ($request->filled('search')) {
+        $search = $request->search;
+
+        $query->where(function ($q) use ($search) {
+            $q->where('user', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%")
+              ->orWhere('action', 'like', "%{$search}%")
+              ->orWhere('module', 'like', "%{$search}%");
+        });
     }
-    
-    public function user_activity(){
-        return view('admin.users.user-activity');
+
+    // USER FILTER
+    if ($request->filled('user')) {
+        $query->where('user', $request->user);
     }
+
+    // ACTION FILTER
+    if ($request->filled('action')) {
+        $query->where('action', $request->action);
+    }
+
+    // PAGINATION (IMPORTANT)
+    $activities = $query
+        ->latest()
+        ->paginate(10)
+        ->withQueryString();
+
+    // DISTINCT USERS (optimized)
+    $users = Activity::query()
+        ->select('user')
+        ->distinct()
+        ->orderBy('user')
+        ->pluck('user');
+
+    return view('admin.users.user-activity', compact('activities', 'users'));
+}
 }
