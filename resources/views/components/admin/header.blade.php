@@ -291,6 +291,34 @@
             <a href="{{route('admin.settings')}}" class="p-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                 <i data-lucide="settings" class="w-5 h-5"></i>
             </a>
+            <div class="flex items-center space-x-2 pl-3 border-l border-slate-200 dark:border-slate-700">
+
+                @auth
+
+
+                   <form method="POST" action="{{ route('logout') }}" onsubmit="return confirmLogout(event)">
+                        @csrf
+                        <button type="submit"
+                            class="px-3 py-2 text-sm rounded-xl bg-red-500 text-white hover:bg-red-600 transition">
+                            Logout
+                        </button>
+                    </form>
+                @else
+
+                    <a href="{{ route('auth') }}"
+                       class="px-3 py-2 text-sm rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition">
+                        Login
+                    </a>
+
+                    <a href="{{ route('auth') }}"
+                       class="px-3 py-2 text-sm rounded-xl border border-blue-600 text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-800 transition">
+                        Signup
+                    </a>
+
+                @endauth
+
+            </div>
+
 
             <!-- USER -->
             <div class="flex items-center space-x-3 pl-3 border-l border-slate-200 dark:border-slate-700">
@@ -314,7 +342,18 @@
         </div>
 
     </div>
-</div><script>
+</div>
+<script>
+
+function confirmLogout(event) {
+    event.preventDefault();
+
+    if (confirm("Are you sure you want to logout?")) {
+        event.target.submit();
+    }
+
+    return false;
+}
 
 let input = document.getElementById('globalSearch');
 let results = document.getElementById('searchResults');

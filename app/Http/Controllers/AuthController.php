@@ -48,7 +48,7 @@ class AuthController extends Controller
             
         Auth::login($user);
 
-        return redirect()->route('admin.overview');
+        return redirect()->route('dashboard');
     }
 
     // LOGIN
@@ -59,19 +59,39 @@ class AuthController extends Controller
             'password' => 'required|string'
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+         if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
 
-            // 🔥 ROLE CHECK
-            if (Auth::user()->role === 'admin') {
-                return redirect()->route('admin.dashboard');;
-            }
+        $user = Auth::user();
 
-            return redirect('/dashboard');
+        // previous page kaydi
+        $redirectTo = url()->previous();
+
+        // hubi in previous URL uu yahay login/auth page
+        if (
+            str_contains($redirectTo, '/auth') ||
+            str_contains($redirectTo, '/login') ||
+            $redirectTo === url('/')
+        ) {
+            $redirectTo = null;
         }
 
+        // ADMIN
+        if ($user->role === 'admin') {
+            return $redirectTo
+                ? redirect()->intended($redirectTo)
+                : redirect()->route('admin.dashboard');
+        }
+
+        // USER
+        return $redirectTo
+            ? redirect()->intended($redirectTo)
+            : redirect('/dashboard');
+    }
+
         return back()->withErrors([
-            'email' => 'Invalid email or password'
+            'email' => 'Invalid email or password',
+            'password' =>'Invalid email or password'
         ]);
     }
 

@@ -90,7 +90,7 @@ backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-700/50 flex flex
     </div>
 
     {{-- Navigation --}}
-    <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+    <nav x-data="{open:false}" class="flex-1 p-4 space-y-2 overflow-y-auto" >
 
         @foreach($menuItems as $item)
             <div x-data="{ open: false }">
@@ -164,3 +164,4 @@ backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-700/50 flex flex
 <script>
     lucide.createIcons();
 </script>
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>

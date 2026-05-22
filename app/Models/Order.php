@@ -21,6 +21,7 @@ class Order extends Model
         'payment_method',
         'shipping_address',
         'phone',
+        'delivery_user_id',
     ];
 
     public function user(): BelongsTo
@@ -44,6 +45,10 @@ class Order extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+    public function rider()
+    {
+        return $this->belongsTo(User::class, 'delivery_user_id');
     }
     protected static function booted()
     {

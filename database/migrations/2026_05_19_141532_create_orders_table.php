@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('payment_method')->nullable();
             $table->text('shipping_address')->nullable();
             $table->string('phone')->nullable();
+            $table->foreignId('delivery_user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
     }

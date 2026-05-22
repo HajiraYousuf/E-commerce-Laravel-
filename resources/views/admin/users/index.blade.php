@@ -107,12 +107,12 @@
                     </td>
 
                     {{-- ACTIONS --}}
-                    <td class="px-6 py-5 text-center">
-                        <a href="/admin/users?highlight={{ $user->id }}"
+                    {{-- <td class="px-6 py-5 text-center">
+                        <a href="/admin/users{{ $user->id }}"
                            class="px-3 py-1 text-sm rounded-xl bg-indigo-600 text-white hover:bg-indigo-700">
                             View
                         </a>
-                    </td>
+                    </td> --}}
 
                 </tr>
 

@@ -62,6 +62,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Settings::class);
     }
+    public function deliveries()
+    {
+        return $this->hasMany(Order::class, 'delivery_user_id');
+    }
      protected static function booted()
     {
         static::created(function ($user) {
