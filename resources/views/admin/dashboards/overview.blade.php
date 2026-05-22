@@ -1,6 +1,5 @@
 <x-layouts.app>
-
-    <x-admin.overview.header/>
+    <x-admin.overview.header/> 
     <x-admin.overview.stat-cards :stats="$stats"/>
 
     {{-- MAIN SECTION --}}
@@ -17,6 +16,7 @@
     :totalRevenue="$totalRevenue"
     :totalExpenses="$totalExpenses"
     :netProfit="$netProfit"
+    :bottomCards="$bottomCards"
 />
             </div>
         </div>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\User;
+use App\Notifications\ProductNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -34,24 +36,34 @@ class ProductController extends Controller
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
+        // upload image
         $imagePath = null;
 
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('products', 'public');
         }
 
-        Product::create([
+        // create product
+        $product = Product::create([
             'name'        => $request->name,
             'sku'         => $request->sku,
             'category'    => $request->category,
             'price'       => $request->price,
             'stock'       => $request->stock,
-            'sales'       => 0,
+            'sold'        => 0, // make sure DB column is "sold"
             'description' => $request->description ?? '',
             'image'       => $imagePath,
         ]);
 
-        return redirect()->route('products.index')
+        // send notification to all admins
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            $admin->notify(new ProductNotification($product));
+        }
+
+        return redirect()
+            ->route('products.index')
             ->with('success', 'Product created successfully');
     }
 
@@ -89,20 +101,20 @@ class ProductController extends Controller
             'description' => $request->description,
         ];
 
+        // update image
         if ($request->hasFile('image')) {
 
-            // delete old image
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
 
-            // upload new image
             $data['image'] = $request->file('image')->store('products', 'public');
         }
 
         $product->update($data);
 
-        return redirect()->route('products.index')
+        return redirect()
+            ->route('products.index')
             ->with('success', 'Product updated successfully');
     }
 
@@ -115,7 +127,8 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return redirect()->route('products.index')
+        return redirect()
+            ->route('products.index')
             ->with('success', 'Product deleted successfully');
     }
 }

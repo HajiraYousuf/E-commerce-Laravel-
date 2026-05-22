@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('sku')->unique();
-            $table->string('category');
+            $table->string('category_id');
             $table->decimal('price',10,2);
             $table->integer('stock')->default(0);
             $table->integer('sold')->default(0);

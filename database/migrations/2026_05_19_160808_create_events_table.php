@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('desc')->nullable();
-            $table->string('start');
+            $table->string('start')->nullable();
             $table->string('end')->nullable();
-            $table->date('date');   // 🔥 muhiim
+            $table->date('date')->nullable();   // 🔥 muhiim
             $table->string('color')->nullable();
             $table->timestamps();
         });

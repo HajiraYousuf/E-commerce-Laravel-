@@ -195,4 +195,5 @@ class DashboardsController extends Controller
             'revenueData'
         ));
     }
+    
 }

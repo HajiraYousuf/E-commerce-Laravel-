@@ -5,7 +5,8 @@
     <title>{{ $title ?? 'Dashboard' }}</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>  
 </head>
 
 <body class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 
@@ -22,10 +23,9 @@ dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-all duration
     <div class="flex-1 flex flex-col overflow-hidden">
 
         {{-- HEADER --}}
-        <header class="border-b border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl">
+        <header class="sticky top-0 z-50 border-b border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl">
             <x-admin.header />
         </header>
-
         {{-- CONTENT --}}
         <main class="flex-1 overflow-y-auto">
             <div class="p-6 space-y-6">
@@ -89,7 +89,6 @@ function updateIcon() {
 
     icon.setAttribute("data-lucide", isDark ? "moon" : "sun");
 
-    lucide.createIcons();
 }    
     </script>
 

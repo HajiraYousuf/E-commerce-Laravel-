@@ -248,8 +248,8 @@ class ReportController extends Controller
 
             fclose($handle);
 
-        }, $fileName, [
-            'Content-Type' => 'application/vnd.ms-excel',
+        }, str_replace('.xlsx', '.csv', $fileName), [
+    'Content-Type' => 'text/csv',
         ]);
         
     }

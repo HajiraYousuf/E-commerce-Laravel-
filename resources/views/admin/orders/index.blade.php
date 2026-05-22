@@ -1,3 +1,7 @@
+@php
+        $highlight = request('highlight');
+
+@endphp
 <x-layouts.app>
 
 <div class="space-y-6">
@@ -84,7 +88,9 @@
 
                     @forelse($orders as $order)
 
-                    <tr class="hover:bg-gray-50 dark:hover:bg-slate-800/40 transition">
+                    <tr id="item-{{ $order->id }}"
+                    class="transition hover:bg-gray-50 dark:hover:bg-slate-800/40
+                    {{ (string)$highlight === (string)$order->id ? 'bg-yellow-200 dark:bg-yellow-700' : '' }}">
 
                         {{-- ORDER --}}
                         <td class="px-6 py-5">

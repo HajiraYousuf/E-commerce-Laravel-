@@ -87,11 +87,12 @@ class PagesController extends Controller
         ->withQueryString();
 
     // DISTINCT USERS (optimized)
-    $users = Activity::query()
-        ->select('user')
-        ->distinct()
-        ->orderBy('user')
-        ->pluck('user');
+    $users = Activity::with('user')
+        ->get()
+        ->pluck('user.name')
+        ->filter()
+        ->unique()
+        ->values();
 
     return view('admin.users.user-activity', compact('activities', 'users'));
 }

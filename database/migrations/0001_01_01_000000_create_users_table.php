@@ -16,8 +16,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('username')->nullable();
             $table->string('email')->unique();
-
-            // PROFILE
             $table->string('phone')->nullable();
             $table->string('country')->nullable();
             $table->string('address')->nullable();
@@ -27,12 +25,7 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->integer('age')->nullable(); 
             $table->string('region')->nullable()->after('age');
-
-
-            // ROLE
             $table->string('role')->default('user');
-
-            // AUTH
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

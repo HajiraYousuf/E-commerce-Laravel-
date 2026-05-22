@@ -22,13 +22,12 @@
 
             <i data-lucide="calendar" class="w-5 h-5 text-gray-500 dark:text-gray-400"></i>
 
-            <span id="dateText" class="text-sm font-medium">
-                Jan 05, 2024 → Jan 05, 2025
-            </span>
+            <span id="dateText" class="text-sm font-medium">Select Date Range  </span>
         </div>
 
         <!-- FILTER -->
         <button
+        id="filterBtn"
             class="px-4 py-2 rounded-xl border text-sm font-medium
             bg-white/80 backdrop-blur text-gray-900 border-gray-200
             hover:bg-white transition
@@ -37,32 +36,34 @@
         </button>
 
         <!-- EXPORT -->
-        <button
-            class="px-4 py-2 rounded-xl text-sm font-medium
-            bg-gradient-to-r from-indigo-500 to-violet-600 text-white
-            hover:opacity-90 transition shadow-md">
-            Export
-        </button>
+        <form action="{{ route('overview.export') }}" method="GET">
 
+        <input type="hidden" name="start" id="startDate">
+        <input type="hidden" name="end" id="endDate">
+
+    <button
+        type="submit"
+        class="px-4 py-2 rounded-xl text-sm font-medium
+        bg-gradient-to-r from-indigo-500 to-violet-600 text-white
+        hover:opacity-90 transition shadow-md">
+        Export
+    </button>
+
+</form>
     </div>
 </div>
 <!-- Hidden input -->
 <input type="text" id="hiddenDate" class="hidden">
 
 <!-- Lucide -->
-<script src="https://unpkg.com/lucide@latest"></script>
 
 <!-- Flatpickr -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
 <script>
-lucide.createIcons();
 
 const fp = flatpickr("#hiddenDate", {
     mode: "range",
     dateFormat: "M d, Y",
-    defaultDate: ["2024-01-05", "2025-01-05"],
+    defaultDate: ["2026-05-15", "2026 -05-30"],
 
     showMonths: 2,
     static: true,
@@ -76,12 +77,21 @@ const fp = flatpickr("#hiddenDate", {
     },
 
     onChange: function(selectedDates) {
+
         if (selectedDates.length === 2) {
+
             const f = fp.formatDate;
 
             document.getElementById("dateText").innerText =
                 f(selectedDates[0], "M d, Y") + " → " +
                 f(selectedDates[1], "M d, Y");
+
+            // EXPORT DATES
+            document.getElementById("startDate").value =
+                f(selectedDates[0], "Y-m-d");
+
+            document.getElementById("endDate").value =
+                f(selectedDates[1], "Y-m-d");
         }
     }
 });
@@ -89,8 +99,20 @@ const fp = flatpickr("#hiddenDate", {
 document.getElementById("dateButton").addEventListener("click", () => {
     fp.open();
 });
-</script>
+document.getElementById("filterBtn").addEventListener("click", function () {
 
+    const start = document.getElementById("startDate").value;
+    const end = document.getElementById("endDate").value;
+
+    if (!start || !end) {
+        alert("Please select date range");
+        return;
+    }
+
+    window.location.href =
+        `?start=${start}&end=${end}`;
+});
+</script>
 <style>
 /* =========================
    CALENDAR BASE STYLE

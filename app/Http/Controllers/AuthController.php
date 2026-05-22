@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Activity;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Notifications\UserNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -31,17 +32,23 @@ class AuthController extends Controller
             'role' => 'user',
         ]);
         Activity::create([
-    'user_id' => $user->id,
-    'email' => $user->email, 
-    'action' => 'user_registered',
-    'module' => 'users',
-    'status' => 'success',
-    'date' => now()->toDateString(),
-    'time' => now()->toTimeString(),
-]);
+            'email' => $user->email, 
+            'action' => 'user_registered',
+            'module' => 'users',
+            'status' => 'success',
+            'date' => now()->toDateString(),
+            'time' => now()->toTimeString(),
+        ]);
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            $admin->notify(new UserNotification($user));
+        }
+
+            
         Auth::login($user);
 
-        return redirect()->route('dashboard');
+        return redirect()->route('admin.overview');
     }
 
     // LOGIN

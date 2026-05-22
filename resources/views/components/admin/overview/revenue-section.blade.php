@@ -27,86 +27,37 @@
         <canvas id="revenueChart"></canvas>
     </div>
 
-    {{-- BOTTOM CARDS --}}
     <div class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
 
-        {{-- Revenue --}}
+    @foreach ($bottomCards as $card)
+
         <div class="rounded-2xl bg-slate-50 dark:bg-[#0F172A] p-5 border border-slate-200 dark:border-white/5">
 
             <p class="text-sm text-slate-500 dark:text-slate-400">
-                Total Revenue
+                {{ $card['title'] }}
             </p>
 
             <div class="mt-3 flex items-center justify-between">
 
                 <h3 class="text-3xl font-bold text-slate-800 dark:text-white">
-                    ${{ number_format($totalRevenue) }}
+                    ${{ number_format($card['value']) }}
                 </h3>
 
-                <span class="text-sm font-semibold text-emerald-500 dark:text-emerald-400">
-                    ↑ 12.5%
+                <span class="text-sm font-semibold 
+                    {{ $card['growth'] >= 0 ? 'text-emerald-500' : 'text-red-500' }}">
+
+                    {{ $card['growth'] >= 0 ? '↑' : '↓' }}
+                    {{ abs($card['growth']) }}%
+
                 </span>
 
             </div>
 
-            <p class="mt-2 text-sm text-slate-400 dark:text-slate-500">
-                vs Dec 01 - Dec 15
-            </p>
-
         </div>
 
-        {{-- Expenses --}}
-        <div class="rounded-2xl bg-slate-50 dark:bg-[#0F172A] p-5 border border-slate-200 dark:border-white/5">
+    @endforeach
 
-            <p class="text-sm text-slate-500 dark:text-slate-400">
-                Total Expenses
-            </p>
-
-            <div class="mt-3 flex items-center justify-between">
-
-                <h3 class="text-3xl font-bold text-slate-800 dark:text-white">
-                    ${{ number_format($totalExpenses) }}
-                </h3>
-
-                <span class="text-sm font-semibold text-red-500 dark:text-red-400">
-                    ↓ 3.4%
-                </span>
-
-            </div>
-
-            <p class="mt-2 text-sm text-slate-400 dark:text-slate-500">
-                vs Dec 01 - Dec 15
-            </p>
-
-        </div>
-
-        {{-- Profit --}}
-        <div class="rounded-2xl bg-slate-50 dark:bg-[#0F172A] p-5 border border-slate-200 dark:border-white/5">
-
-            <p class="text-sm text-slate-500 dark:text-slate-400">
-                Net Profit
-            </p>
-
-            <div class="mt-3 flex items-center justify-between">
-
-                <h3 class="text-3xl font-bold text-slate-800 dark:text-white">
-                    ${{ number_format($netProfit) }}
-                </h3>
-
-                <span class="text-sm font-semibold text-emerald-500 dark:text-emerald-400">
-                    ↑ 18.7%
-                </span>
-
-            </div>
-
-            <p class="mt-2 text-sm text-slate-400 dark:text-slate-500">
-                vs Dec 01 - Dec 15
-            </p>
-
-        </div>
-
-    </div>
-
+</div>
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', () => {

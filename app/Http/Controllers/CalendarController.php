@@ -41,4 +41,25 @@ class CalendarController extends Controller
             'selectedDay'
         ));
     }
+      public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required',
+            'date' => 'required',
+            'color'=> 'nullable'
+        ]);
+
+        Event::create([
+                'title' => $request->title,
+                'date' => $request->date,
+                'color' => $request->color,
+            ]);
+        return back()->with('success', 'Event created successfully');
+    }
+
+    public function destroy(Event $event)
+    {
+        $event->delete();
+        return back()->with('success', 'Event deleted');
+    }
 }

@@ -22,10 +22,8 @@
         "id" => "users",
         "icon" => "Users",
         "label" => "Users",
-        "count" => "2.4k",
         "submenu" => [
             ["id" => "all_users", "label" => "All Users","route" => "admin.users_list"],
-            ["id" => "roles", "label" => "Roles & Permissions","route" => "admin.roles_perm"],
             ["id" => "activity", "label" => "User Activity","route" => "admin.user_activity"],
         ],
     ],
@@ -34,17 +32,16 @@
         "icon" => "ShoppingBag",
         "label" => "E-commerce",
         "submenu" => [
-            ["id" => "categories", "label" => "categories","route" => "admin.categories"],
-            ["id" => "products", "label" => "Products"],
-            ["id" => "orders", "label" => "Orders"],
-            ["id" => "customers", "label" => "Customers"],
+            ["id" => "categories", "label" => "categories","route" => "categories.index"],
+            ["id" => "products", "label" => "Products","route" => "products.index"],
+            ["id" => "orders", "label" => "Orders","route" => "orders.index"],
+            ["id" => "customers", "label" => "Customers","route" => "customers.index"],
         ],
     ],
     [
         "id" => "inventory",
         "icon" => "Package",
         "label" => "Inventory",
-        "count" => "847",
         "route" => "admin.inventory"
     ],
     [
@@ -57,7 +54,6 @@
         "id" => "messages",
         "icon" => "MessagesSquare",
         "label" => "Messages",
-        "badge" => "12",
         "route" => "admin.messages"
     ],
     [
@@ -114,12 +110,12 @@ backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-700/50 flex flex
                         <span class="font-medium ml-2">{{ $item['label'] }}</span>
 
                         {{-- Badge --}}
-                        @if(isset($item['badge']))
-                            <span class="px-2 py-1 text-xs bg-red-500 text-white rounded-full">
-                                {{ $item['badge'] }}
+                        @if(isset($item['id']) && isset($menuCounts[$item['id']]))
+                            <span class="px-2 py-1 text-xs bg-slate-200 dark:bg-slate-700
+                            text-slate-600 dark:text-slate-300 rounded-full">
+                                {{ $menuCounts[$item['id']] }}
                             </span>
                         @endif
-
                         {{-- Count --}}
                         @if(isset($item['count']))
                             <span class="px-2 py-1 text-xs bg-slate-200 dark:bg-slate-700

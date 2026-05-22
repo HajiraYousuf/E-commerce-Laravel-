@@ -67,11 +67,45 @@
                 </a>
 
                 {{-- ADD EVENT --}}
-                <button
-                    class="px-5 h-11 rounded-2xl bg-violet-600 text-white font-medium hover:bg-violet-700 transition">
-                    + Add Event
-                </button>
+                <div class="w-full lg:w-auto">
+    <form method="POST" action="{{ route('admin.events.store') }}"
+        class="flex flex-col lg:flex-row items-stretch lg:items-center gap-2">
 
+        @csrf
+
+        {{-- TITLE --}}
+        <input type="text" name="title" placeholder="Event title"
+            class="w-full lg:w-40 px-3 py-2 rounded-xl
+            border border-gray-200 dark:border-white/10
+            bg-white dark:bg-white/[0.03]
+            text-gray-900 dark:text-white
+            placeholder-gray-400 dark:placeholder-gray-500
+            focus:outline-none focus:ring-2 focus:ring-violet-500 text-sm">
+
+        {{-- DATE --}}
+        <input type="date" name="date"
+            class="w-full lg:w-40 px-3 py-2 rounded-xl
+            border border-gray-200 dark:border-white/10
+            bg-white dark:bg-white/[0.03]
+            text-gray-900 dark:text-white
+            focus:outline-none focus:ring-2 focus:ring-violet-500 text-sm">
+
+        {{-- COLOR --}}
+        <input type="color" name="color"
+            class="w-12 h-10 rounded-xl border border-gray-200 dark:border-white/10 bg-transparent">
+
+        {{-- BUTTON --}}
+        <button type="submit"
+            class="px-5 py-2.5 rounded-xl
+            bg-violet-600 hover:bg-violet-700
+            text-white font-medium text-sm
+            transition shadow-md shadow-violet-500/20">
+
+            + Add
+        </button>
+
+    </form>
+</div>
             </div>
 
         </div>
@@ -175,8 +209,9 @@
 
                     <div class="flex items-center gap-2">
 
-                        <span class="w-2 h-2 rounded-full shrink-0 {{ $event->color }}"></span>
-
+                        <span class="w-2 h-2 rounded-full"
+                            style="background-color: {{ $event->color }}">
+                        </span>
                         <p class="text-[10px] sm:text-xs truncate
                             text-gray-600 dark:text-gray-300
                             group-hover:text-gray-900 dark:group-hover:text-white

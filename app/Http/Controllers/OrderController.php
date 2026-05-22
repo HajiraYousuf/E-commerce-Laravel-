@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-
+use App\Notifications\NewOrderNotification;
+use App\Models\User;
 use App\Models\Order;
+use App\Notifications\OrderNotification;
 
 class OrderController extends Controller
 {
@@ -40,5 +42,29 @@ class OrderController extends Controller
     ]);
 
     return back()->with('success', 'Status updated to ' . $nextStatus);
+    }
+public function store(Request $request)
+{
+    $request->validate([
+        'total' => 'required',
+    ]);
+
+    // create order
+    $order = Order::create([
+        'user_id' => auth()->id(),
+        'total' => $request->total,
+        'status' => 'Pending',
+    ]);
+
+    // send notification to admins
+    $admins = User::where('role', 'admin')->get();
+
+    foreach ($admins as $admin) {
+
+        $admin->notify(new OrderNotification($order));
+
+    }
+
+    return back()->with('success', 'Order created successfully');
 }
 }

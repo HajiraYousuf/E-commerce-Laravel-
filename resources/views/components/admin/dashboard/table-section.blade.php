@@ -57,7 +57,8 @@
                     </td>
 
                     <td class="p-4">
-                        <span class="text-xs px-3 py-1 rounded-full {{ $statusColors[$order['status']] }}">
+                        <span class="text-xs px-3 py-1 rounded-full
+                            {{ $statusColors[$order['status']] ?? 'bg-gray-100 text-gray-600' }}">
                             {{ $order['status'] }}
                         </span>
                     </td>

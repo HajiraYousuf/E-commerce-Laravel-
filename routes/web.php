@@ -2,88 +2,29 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardsController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OverviewController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
+use App\Models\Product;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
 | PUBLIC PAGES
 |--------------------------------------------------------------------------
 */
-
-
-Route::get('/', function () {
-    return view('components.user.pages.home');
-})->name('home');
-
-Route::get('/products', function () {
-    return view('components.user.pages.products');
-})->name('products');
-
-/*
-|--------------------------------------------------------------------------
-| PRODUCT DETAILS
-|--------------------------------------------------------------------------
-*/
-
-Route::get('/product/{id}', function ($id) {
-
-    $products = [
-        'headphone' => [
-            'name' => 'Airpods Pro',
-            'price' => '$50',
-            'image' => 'image1.jpg',
-            'desc' => 'High quality sound with noise cancellation.'
-        ],
-        'iphone' => [
-            'name' => 'iPhone 16 PRO',
-            'price' => '$1,000',
-            'image' => 'image2.jpg',
-            'desc' => 'Premium smartphone with advanced camera system.'
-        ],
-        'laptops' => [
-            'name' => 'MacBook Air',
-            'price' => '$570',
-            'image' => 'image3.jpg',
-            'desc' => 'Powerful and lightweight laptop for developers.'
-        ],
-        'samsung' => [
-            'name' => 'Samsung S24 Ultra',
-            'price' => '$900',
-            'image' => 'image4.jpg',
-            'desc' => 'Flagship Android phone with AI features.'
-        ],
-        'smartwatch' => [
-            'name' => 'Apple Watch 8',
-            'price' => '$80',
-            'image' => 'image5.jpg',
-            'desc' => 'Smart health and fitness tracking watch.'
-        ],
-    ];
-
-    $product = $products[$id] ?? null;
-
-    return view('components.user.pages.show', compact('product', 'id'));
-})->name('products.show');
-
-/*
-|--------------------------------------------------------------------------
-| CHECKOUT
-|--------------------------------------------------------------------------
-*/
-
-Route::get('/checkout', function () {
-
-    $productId = request()->query('product_id', 'Unknown Product');
-    $productName = ucwords(str_replace('-', ' ', $productId));
-
-    return view('components.user.pages.checkout', compact('productName'));
-})->name('products.checkout');
 
 /*
 |--------------------------------------------------------------------------
@@ -127,17 +68,51 @@ Route::get('/admin/dashboard', [DashboardsController::class, 'dashboard'])
     ->name('admin.dashboard');
 
 Route::get('/admin/overview', [OverviewController::class, 'overview'])->name('admin.overview');
+Route::get('/admin/analytics/data', [OverviewController::class, 'analyticsData']);
+Route::get('/overview/export',[OverviewController::class,'export'])
+    ->name('overview.export');
 Route::get('/admin/report', [ReportController::class, 'report'])->name('admin.report');
 Route::get('/admin/insight', [PagesController::class, 'insight'])->name('admin.insight');
 Route::get('/admin/inventory', [PagesController::class, 'inventroy'])->name('admin.inventory');
-Route::get('/admin/transaction', [PagesController::class, 'transaction'])->name('admin.transaction');
-Route::get('/admin/calendar', [PagesController::class, 'calendar'])->name('admin.calendar');
-Route::get('/admin/settings', [PagesController::class, 'settings'])->name('admin.settings');
-Route::get('/admin/messages', [PagesController::class, 'messages'])->name('admin.messages');
-Route::get('/admin/products', [PagesController::class, 'products'])->name('admin.products');
+Route::get('/admin/transaction', [TransactionController::class, 'index'])->name('admin.transaction');
+Route::get('/admin/calendar', [CalendarController::class, 'index'])->name('admin.calendar');
+Route::get('/admin/settings', [SettingsController::class, 'index'])->name('admin.settings');
+ Route::post('/admin/settings/profile', [SettingsController::class, 'updateProfile'])
+            ->name('settings.profile');
+ Route::post('/settings/password', [SettingsController::class, 'updatePassword'])
+            ->name('settings.password');
+
+         Route::post('/settings/notifications', [SettingsController::class, 'updateNotifications'])
+            ->name('settings.notifications.update');
+             Route::post('/settings/appearance', [SettingsController::class, 'updateSettings'])
+            ->name('settings.update');
+
+Route::get('/admin/messages', [MessageController::class, 'index'])->name('admin.messages');
+Route::prefix('admin')
+    ->group(function () {
+
+        Route::resource('products', ProductController::class);
+
+    });
+    Route::prefix('admin')
+    ->group(function () {
+
+        Route::resource('orders', OrderController::class);
+         Route::post(
+            '/orders/{order}/update-status',
+            [OrderController::class, 'updateStatus']
+        )->name('orders.updateStatus');
+
+    });
+    Route::post('/notifications/read', function () {
+        auth()->user()->unreadNotifications->markAsRead();
+        return back();
+    })->name('notifications.read');
 Route::get('/admin/users-list', [UserController::class, 'index'])->name('admin.users_list');
 Route::get('/admin/roles-permissions', [PagesController::class, 'roles_perm'])->name('admin.roles_perm');
 Route::get('/admin/user-activity', [PagesController::class, 'user_activity'])->name('admin.user_activity');
+Route::get('/admin/global-search', [SearchController::class, 'globalSearch'])
+    ->name('admin.global.search');
 
 /*
 |--------------------------------------------------------------------------
@@ -145,12 +120,23 @@ Route::get('/admin/user-activity', [PagesController::class, 'user_activity'])->n
 |--------------------------------------------------------------------------
 */
 
-Route::get('/admin/categories', [CategoryController::class, 'index'])->name('admin.categories');
-Route::get('/admin/categories/create', [CategoryController::class, 'create'])->name('admin.categories.create');
-Route::post('/admin/categories/store', [CategoryController::class, 'store'])->name('admin.categories.store');
+Route::prefix('admin')
+    ->group(function () {
 
+        Route::resource('categories', CategoryController::class);
+
+    });
+    
+Route::prefix('admin')
+    ->group(function () {
+
+        Route::resource('customers', CustomerController::class);
+
+    });
 Route::get('/admin/reports/download/{type}', [ReportController::class, 'download'])
     ->name('admin.reports.download');
 
 Route::get('/reports/export-all', [ReportController::class, 'exportAll'])
     ->name('reports.export.all');
+Route::post('/admin/events', [CalendarController::class, 'store'])->name('admin.events.store');
+Route::delete('/admin/events/{event}', [CalendarController::class, 'destroy'])->name('admin.events.delete');
