@@ -3,10 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardsController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OverviewController;
@@ -32,10 +34,64 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 |--------------------------------------------------------------------------
 */
 
+Route::post('/wishlist/toggle/{id}', [WishlistController::class, 'store'])
+    ->name('wishlist.toggle');
 
-Route::get('/home', [PagesController::class, 'home'])
+Route::get('/wishlist', [WishlistController::class, 'index'])
+    ->name('wishlist.index');
+Route::get('/', [HomeController::class, 'home'])
     ->middleware('auth')
-    ->name('home');/*
+    ->name('home');
+
+Route::get('/shop', [HomeController::class, 'shop'])
+    ->name('shop'); 
+Route::get('/product/{id}', [HomeController::class, 'productShow'])
+    ->name('product.show');    
+Route::get('/categories', [HomeController::class, 'categories']);  
+
+Route::get('/categories/{category}', [HomeController::class, 'show'])
+    ->name('category.show');
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/cart', [CartController::class, 'index'])
+        ->name('cart');
+
+    Route::post('/cart/add/{productId}', [CartController::class, 'add'])
+        ->name('cart.add');
+
+    Route::put('/cart/update/{id}', [CartController::class, 'update'])
+        ->name('cart.update');
+
+    Route::delete('/cart/{id}', [CartController::class, 'remove'])
+        ->name('cart.remove');
+
+    Route::delete('/cart/clear', [CartController::class, 'clear'])
+        ->name('cart.clear');
+});
+
+
+Route::get('/category/{id}', [CategoryController::class, 'show'])
+    ->name('category.show');
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/orders', [HomeController::class, 'orders'])->name('orders.index');
+
+    Route::get('/orders/{id}', [HomeController::class, 'orderShow'])->name('orders.show');
+
+});
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
+
+    Route::post('/place-order', [HomeController::class, 'placeOrder'])->name('place.order');
+
+});
+Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+Route::post('/contact', [HomeController::class, 'sendMessage'])->name('contact.send');
+
+    /*
 |--------------------------------------------------------------------------
 | ADMIN ROUTES
 |--------------------------------------------------------------------------
@@ -45,7 +101,7 @@ Route::get('/admin/dashboard', [DashboardsController::class, 'dashboard'])
     ->middleware(['auth', 'admin'])
     ->name('admin.dashboard');
 
-Route::get('/admin/overview', [OverviewController::class, 'overview'])->name('admin.overview');
+Route::get('/admin/overview', [OverviewController::class, 'overview'])->name('admin.overview')->middleware(['auth', 'admin']);;
 Route::get('/admin/analytics/data', [OverviewController::class, 'analyticsData'])->middleware(['auth', 'admin']);
 Route::get('/overview/export',[OverviewController::class,'export'])->middleware(['auth', 'admin'])
     ->name('overview.export');
@@ -67,13 +123,18 @@ Route::prefix('admin')->group(function () {
     Route::resource('products', ProductController::class)->middleware(['auth', 'admin']);
 });
 Route::prefix('admin')
-->group(function () {
-Route::resource('orders', OrderController::class);
-Route::post(
-    '/orders/{order}/update-status',
-    [OrderController::class, 'updateStatus']
-    )->name('orders.updateStatus')->middleware(['auth', 'admin']);
-});
+    ->name('admin.')
+    ->middleware(['auth', 'admin'])
+    ->group(function () {
+
+        Route::resource('orders', OrderController::class);
+
+        Route::post(
+            '/orders/{order}/update-status',
+            [OrderController::class, 'updateStatus']
+        )->name('orders.updateStatus');
+
+    });
 Route::post('/notifications/read', function () {
     auth()->user()->unreadNotifications->markAsRead();
     return back();

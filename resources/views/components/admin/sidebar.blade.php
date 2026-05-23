@@ -15,7 +15,6 @@
         "submenu" => [
             ["id" => "overview", "label" => "Overview", "route" => "admin.overview"],
             ["id" => "reports", "label" => "Reports", "route" => "admin.report"],
-            ["id" => "insights", "label" => "Insights", "route" => "admin.insight"],
         ],
     ],
     [
@@ -34,7 +33,7 @@
         "submenu" => [
             ["id" => "categories", "label" => "categories","route" => "categories.index"],
             ["id" => "products", "label" => "Products","route" => "products.index"],
-            ["id" => "orders", "label" => "Orders","route" => "orders.index"],
+            ["id" => "orders", "label" => "Orders","route" => "admin.orders.index"],
             ["id" => "customers", "label" => "Customers","route" => "customers.index"],
         ],
     ],

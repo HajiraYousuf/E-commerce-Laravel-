@@ -36,6 +36,10 @@ class Product extends Model
     {
         return $this->hasMany(Sale::class);
     }
+    public function cartItems()
+    {
+        return $this->hasMany(Cart::class);
+    }
     protected static function booted()
     {
         static::created(function ($product) {

@@ -3,6 +3,7 @@
 @php
 
 
+
 $stats = [
 
     [
@@ -12,7 +13,6 @@ $stats = [
         'subtitle' => 'All products',
         'color' => 'indigo',
         'icon' => 'ri-box-3-line',
-        'chart' => [12, 19, 10, 22, 18, 25, 30]
     ],
 
     [
@@ -22,7 +22,6 @@ $stats = [
         'subtitle' => 'Available products',
         'color' => 'emerald',
         'icon' => 'ri-checkbox-circle-line',
-        'chart' => [10, 15, 12, 18, 20, 22, 28]
     ],
 
     [
@@ -32,7 +31,6 @@ $stats = [
         'subtitle' => 'Running low',
         'color' => 'orange',
         'icon' => 'ri-error-warning-line',
-        'chart' => [5, 8, 6, 10, 7, 9, 11]
     ],
 
     [
@@ -42,7 +40,6 @@ $stats = [
         'subtitle' => 'Unavailable',
         'color' => 'rose',
         'icon' => 'ri-close-circle-line',
-        'chart' => [8, 6, 10, 7, 9, 5, 8]
     ]
 
 ];
@@ -162,10 +159,6 @@ $statusColors = [
 
             </div>
 
-            <!-- CHART -->
-            <div class="mt-4">
-                <canvas id="chart_{{ $stat['id'] }}" height="70"></canvas>
-            </div>
 
         </div>
 
@@ -228,8 +221,7 @@ $statusColors = [
 
                     <!-- CATEGORY -->
                     <td class="px-6 py-4 text-gray-600 dark:text-gray-300">
-                        {{ $product->category }}
-                    </td>
+                        {{ $product->category->name ?? 'No Category' }}                    </td>
 
                     <!-- SKU -->
                     <td class="px-6 py-4 text-gray-600 dark:text-gray-300">
@@ -334,96 +326,5 @@ $statusColors = [
     </div>
 
 </div>
-
-<!-- CHART -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    const stats = @json($stats);
-
-    stats.forEach(stat => {
-
-        const ctx = document.getElementById("chart_" + stat.id);
-
-        new Chart(ctx, {
-
-            type: 'line',
-
-            data: {
-
-                labels: stat.chart.map((_, i) => i + 1),
-
-                datasets: [{
-
-                    data: stat.chart,
-
-                    borderWidth: 2,
-
-                    tension: 0.4,
-
-                    fill: true,
-
-                    pointRadius: 0,
-
-                    borderColor: getColor(stat.color),
-
-                    backgroundColor: getColor(stat.color, true)
-
-                }]
-
-            },
-
-            options: {
-
-                responsive: true,
-
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-
-                scales: {
-                    x: { display: false },
-                    y: { display: false }
-                }
-
-            }
-
-        });
-
-    });
-
-    function getColor(color, bg = false) {
-
-        const map = {
-
-            indigo: bg
-                ? 'rgba(99,102,241,0.15)'
-                : '#6366f1',
-
-            emerald: bg
-                ? 'rgba(16,185,129,0.15)'
-                : '#10b981',
-
-            orange: bg
-                ? 'rgba(249,115,22,0.15)'
-                : '#f97316',
-
-            rose: bg
-                ? 'rgba(244,63,94,0.15)'
-                : '#f43f5e',
-
-        };
-
-        return map[color] || '#6366f1';
-    }
-
-});
-
-</script>
 
 </x-layouts.app>

@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\View;
 use App\Models\Activity;
+use App\Models\Cart;
 use App\Models\message;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -27,6 +29,13 @@ class AppServiceProvider extends ServiceProvider
         'messages' => message::count(),
         'inventory' => Product::count(),
     ];
+    $cartCount = 0;
+
+        if (Auth::check()) {
+            $cartCount = Cart::where('user_id', Auth::id())->sum('quantity');
+        }
+
+        $view->with('cartCount', $cartCount);
 
     if ($user) {
 

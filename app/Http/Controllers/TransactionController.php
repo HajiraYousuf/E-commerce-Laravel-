@@ -23,11 +23,13 @@ public function index(Request $request)
         ->paginate(10);
 
     // ✅ ADD THIS
-    $totalTransactions = Transaction::count();
-    $totalRevenue = Transaction::where('status', 'Completed')->sum('amount');
-    $pendingAmount = Transaction::where('status', 'Pending')->sum('amount');
-    $refundAmount = Transaction::where('status', 'Refunded')->sum('amount');
+$totalTransactions = Transaction::count();
 
+$totalRevenue = Transaction::where('status', 'completed')->sum('amount');
+
+$pendingAmount = Transaction::where('status', 'pending')->sum('amount');
+
+$refundAmount = Transaction::where('status', 'refunded')->sum('amount');
     return view('admin.transaction.transaction', compact(
         'transactions',
         'totalTransactions',

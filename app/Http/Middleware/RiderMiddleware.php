@@ -12,13 +12,13 @@ class RiderMiddleware
     {
         if (!auth()->check()) {
 
-            return redirect('/login');
+            return redirect('/auth');
 
         }
 
         if (auth()->user()->role !== 'rider') {
 
-            abort(403);
+            return redirect('/auth');
 
         }
 

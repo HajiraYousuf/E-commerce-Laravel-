@@ -2,197 +2,554 @@
 
 @section('content')
 
-<!-- DARK MODE SCRIPT -->
-<script>
-    if (
-        localStorage.getItem('theme') === 'dark' ||
-        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)
-    ) {
-        document.documentElement.classList.add('dark');
-    } else {
-        document.documentElement.classList.remove('dark');
-    }
-
-    function toggleTheme() {
-        if (document.documentElement.classList.contains('dark')) {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('theme', 'light');
-        } else {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('theme', 'dark');
-        }
-    }
-</script>
-
-<div class="bg-white dark:bg-gray-950 text-gray-900 dark:text-white transition-all duration-300">
-
 <!-- HERO -->
-<section class="relative overflow-hidden py-24 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 dark:from-black dark:via-gray-900 dark:to-black text-white">
+<section class="relative overflow-hidden bg-gradient-to-br from-blue-700 via-indigo-700 to-gray-900 text-white">
 
-    <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_20%_20%,#3b82f6,transparent)]"></div>
+    <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_right,#ffffff,transparent)]"></div>
 
-    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center relative z-10">
+    <div class="max-w-7xl mx-auto px-6 py-24 relative z-10">
 
-        <div>
-            <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
-                Best Electronics <br> Deals for You ⚡
-            </h1>
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
 
-            <p class="mt-5 text-gray-300 text-lg">
-                Shop smartphones, laptops, headphones & accessories at unbeatable prices.
-            </p>
+            <div>
 
-            <div class="mt-8 flex gap-4">
-                <a href="#" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl font-semibold shadow-lg transition">
-                    Shop Now
-                </a>
+                <span class="px-4 py-2 rounded-full bg-white/10 border border-white/20 text-sm">
+                    ⚡ Best Electronics Store
+                </span>
 
-                <a href="#" class="border border-gray-400 px-6 py-3 rounded-xl hover:bg-white hover:text-black transition">
-                    Explore
-                </a>
+                <h1 class="mt-6 text-5xl lg:text-6xl font-extrabold leading-tight">
+                    Discover Modern
+                    Electronics For
+                    Everyday Life
+                </h1>
 
-                <button onclick="toggleTheme()" class="ml-2 px-4 py-3 rounded-xl bg-gray-700 hover:bg-gray-600 transition">
-                    🌙/☀️
-                </button>
+                <p class="mt-6 text-lg text-gray-200 leading-relaxed">
+                    Shop trending gadgets, premium laptops, smartphones,
+                    headphones and accessories at unbeatable prices.
+                </p>
+
+                <div class="mt-8 flex flex-wrap gap-4">
+
+                    <a href="{{ route('shop') }}"
+                        class="px-7 py-4 bg-white text-black rounded-2xl font-semibold hover:scale-105 transition">
+                        Shop Now
+                    </a>
+
+                    <a href="#categories"
+                        class="px-7 py-4 border border-white/30 rounded-2xl hover:bg-white hover:text-black transition">
+                        Explore Categories
+                    </a>
+
+                </div>
+
             </div>
-        </div>
 
-        <div class="flex justify-center">
-            <img src="{{ asset('images/hero-electronics.png') }}"
-                 class="w-full max-w-md drop-shadow-2xl hover:scale-105 transition duration-500" />
+            <div class="flex justify-center">
+
+                <img src="{{ asset('images/image1.jpg') }}"
+                    class="w-full max-w-xl drop-shadow-2xl hover:scale-105 transition duration-500">
+
+            </div>
+
         </div>
 
     </div>
+
 </section>
 
-<!-- CATEGORIES -->
-<section class="py-20 bg-gray-100 dark:bg-gray-900 transition">
+<!-- SEARCH -->
+<section class="py-10 bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800">
+
     <div class="max-w-7xl mx-auto px-6">
 
-        <h2 class="text-3xl font-bold mb-10">Shop by Categories</h2>
+        <form action="{{ route('shop') }}" method="GET"
+            class="grid md:grid-cols-4 gap-4">
+
+            <input
+                type="text"
+                name="search"
+                value="{{ request('search') }}"
+                placeholder="Search products..."
+                class="md:col-span-2 px-5 py-4 rounded-2xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 outline-none">
+
+            <select
+                name="category"
+                class="px-5 py-4 rounded-2xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 outline-none">
+
+                <option value="">
+                    All Categories
+                </option>
+
+                @foreach($categories as $category)
+
+                <option
+                    value="{{ $category->id }}"
+                    {{ request('category') == $category->id ? 'selected' : '' }}>
+
+                    {{ $category->name }}
+
+                </option>
+
+                @endforeach
+
+            </select>
+
+            <button
+                class="bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-semibold transition">
+                Search
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+<!-- STATS -->
+<section class="py-10 bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800">
+
+    <div class="max-w-7xl mx-auto px-6">
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
 
-            @foreach(['Phones','Laptops','Headphones','Accessories'] as $cat)
-            <div class="group bg-white dark:bg-gray-800 p-6 rounded-2xl shadow hover:shadow-xl hover:-translate-y-1 transition text-center cursor-pointer">
-                <h3 class="font-semibold group-hover:text-blue-500 transition">{{ $cat }}</h3>
+            <div class="bg-gray-100 dark:bg-gray-900 rounded-3xl p-6 text-center">
+                <h3 class="text-3xl font-extrabold">
+                    {{ $productsCount ?? 0 }}+
+                </h3>
+                <p class="text-gray-500 mt-2">
+                    Products
+                </p>
             </div>
+
+            <div class="bg-gray-100 dark:bg-gray-900 rounded-3xl p-6 text-center">
+                <h3 class="text-3xl font-extrabold">
+                    {{ $categoriesCount ?? 0 }}+
+                </h3>
+                <p class="text-gray-500 mt-2">
+                    Categories
+                </p>
+            </div>
+
+            <div class="bg-gray-100 dark:bg-gray-900 rounded-3xl p-6 text-center">
+                <h3 class="text-3xl font-extrabold">
+                    {{ $topSellingProducts->sum('sold') ?? 0 }}+
+                </h3>
+                <p class="text-gray-500 mt-2">
+                    Products Sold
+                </p>
+            </div>
+
+            <div class="bg-gray-100 dark:bg-gray-900 rounded-3xl p-6 text-center">
+                <h3 class="text-3xl font-extrabold">
+                    24/7
+                </h3>
+                <p class="text-gray-500 mt-2">
+                    Support
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- CATEGORIES -->
+<section id="categories" class="py-24 bg-gray-50 dark:bg-gray-950">
+
+    <div class="max-w-7xl mx-auto px-6">
+
+        <div class="flex items-center justify-between mb-12">
+
+            <div>
+                <h2 class="text-4xl font-extrabold">
+                    Explore By Category
+                </h2>
+
+                <p class="text-gray-500 mt-3">
+                    Browse products from popular categories
+                </p>
+            </div>
+
+            <a href="{{ route('shop') }}"
+                class="hidden md:block text-blue-600 font-semibold hover:underline">
+                View All
+            </a>
+
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+
+            @foreach($categories as $category)
+
+            <a href="{{ route('category.show', $category->id) }}"
+                class="group bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow hover:shadow-2xl transition duration-300 hover:-translate-y-2">
+
+                <div class="h-52 overflow-hidden">
+
+<img
+    src="{{ Str::startsWith($category->image, 'http')
+        ? $category->image
+        : asset('storage/' . $category->image) }}"
+    alt="{{ $category->name }}"
+    class="w-full h-64 object-cover">
+                </div>
+
+                <div class="p-6">
+
+                    <h3 class="text-xl font-bold group-hover:text-blue-600 transition">
+                        {{ $category->name }}
+                    </h3>
+
+                    <p class="text-gray-500 mt-2 text-sm line-clamp-2">
+                        {{ $category->description }}
+                    </p>
+
+                    <div class="mt-5 flex items-center justify-between">
+
+                        <span class="text-sm text-gray-400">
+                            Explore Now
+                        </span>
+
+                        <span
+                            class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition">
+                            →
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </a>
+
             @endforeach
 
         </div>
+
     </div>
+
 </section>
 
-<!-- FEATURED -->
-<section class="py-20">
+<!-- TOP SELLING PRODUCTS -->
+<section id="products" class="py-24 bg-white dark:bg-black">
+
     <div class="max-w-7xl mx-auto px-6">
 
-        <div class="flex justify-between items-center mb-10">
-            <h2 class="text-3xl font-bold">Featured Products</h2>
-            <a href="#" class="text-blue-500 hover:underline">View All</a>
+        <div class="flex items-center justify-between mb-12">
+
+            <div>
+
+                <h2 class="text-4xl font-extrabold">
+                    Top Selling Products
+                </h2>
+
+                <p class="text-gray-500 mt-3">
+                    Most popular products loved by customers
+                </p>
+
+            </div>
+
+            <a href="{{ route('shop') }}"
+                class="hidden md:block text-blue-600 font-semibold hover:underline">
+                View All Products
+            </a>
+
         </div>
 
-        <div class="grid md:grid-cols-4 gap-6">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
 
-            @foreach($featuredProducts as $product)
-            <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow hover:shadow-2xl transition group">
+            @foreach($topSellingProducts as $product)
 
-                <img src="{{ asset('storage/'.$product->image) }}"
-                     class="h-44 w-full object-cover group-hover:scale-105 transition duration-500">
+            <div
+                class="group bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-3xl overflow-hidden shadow hover:shadow-2xl transition duration-300 hover:-translate-y-2">
 
-                <div class="p-5">
-                    <h3 class="font-semibold text-lg">{{ $product->name }}</h3>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm">{{ $product->category }}</p>
-
-                    <div class="flex justify-between items-center mt-4">
-                        <span class="font-bold text-blue-500">${{ $product->price }}</span>
-
-                        <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition">
-                            Buy
-                        </a>
+                <div class="relative overflow-hidden">
+                    <img
+                        src="{{ Str::startsWith($product->image, 'http')
+                            ? $product->image
+                            : asset('storage/' . $product->image) }}"
+                        alt="{{ $product->name }}"
+                        class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">                    <div
+                        class="absolute top-4 left-4 px-3 py-1 rounded-full bg-blue-600 text-white text-xs font-semibold shadow">
+                        🔥 Best Seller
                     </div>
+
+                </div>
+
+                <div class="p-6">
+
+                    <div class="flex items-center justify-between">
+
+                        <span
+                            class="text-xs px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+                            {{ $product->category->name ?? 'Category' }}
+                        </span>
+
+                        <span class="text-sm text-orange-500 font-semibold">
+                            Sold {{ $product->sold }}
+                        </span>
+
+                    </div>
+
+                    <h3 class="mt-4 text-xl font-bold line-clamp-1">
+                        {{ $product->name }}
+                    </h3>
+
+                    <p class="mt-3 text-gray-500 text-sm line-clamp-2">
+                        {{ $product->description }}
+                    </p>
+
+                    <div class="mt-6 flex items-center justify-between">
+
+                        <div>
+
+                            <h4 class="text-2xl font-extrabold text-blue-600">
+                                ${{ number_format($product->price, 2) }}
+                            </h4>
+
+                            <p class="text-xs text-gray-400">
+                                Stock: {{ $product->stock }}
+                            </p>
+
+                        </div>
+
+                        <form action="{{ route('cart.add', $product->id) }}"
+                            method="POST">
+
+                            @csrf
+
+                            <button
+                                type="submit"
+                                class="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition shadow-lg">
+
+                                Add To Cart
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
                 </div>
 
             </div>
+
             @endforeach
 
         </div>
+
     </div>
+
 </section>
 
-<!-- LATEST -->
-<section class="py-20 bg-gray-100 dark:bg-gray-900 transition">
-    <div class="max-w-7xl mx-auto px-6">
+<!-- CTA -->
+<section class="py-24 bg-gradient-to-r from-blue-700 to-indigo-700 text-white">
 
-        <h2 class="text-3xl font-bold mb-10">Latest Products</h2>
+    <div class="max-w-4xl mx-auto px-6 text-center">
 
-        <div class="grid md:grid-cols-3 gap-6">
+        <h2 class="text-5xl font-extrabold leading-tight">
+            Upgrade Your Tech Experience
+        </h2>
 
-            @foreach($latestProducts as $product)
-            <div class="flex bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow hover:shadow-xl transition">
+        <p class="mt-6 text-lg text-blue-100">
+            Discover premium electronics with fast delivery and secure shopping.
+        </p>
 
-                <img src="{{ asset('storage/'.$product->image) }}"
-                     class="w-32 h-32 object-cover">
+        <div class="mt-10">
 
-                <div class="p-4 flex-1">
-                    <h3 class="font-semibold">{{ $product->name }}</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ $product->category }}</p>
-
-                    <div class="mt-3 flex justify-between items-center">
-                        <span class="text-blue-500 font-bold">${{ $product->price }}</span>
-
-                        <a href="#" class="text-sm text-white bg-black dark:bg-blue-600 px-3 py-1 rounded-lg">
-                            View
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-            @endforeach
+            <a href="{{ route('shop') }}"
+                class="px-8 py-4 bg-white text-black rounded-2xl font-bold hover:scale-105 transition">
+                Start Shopping
+            </a>
 
         </div>
+
     </div>
+
 </section>
 
 <!-- FOOTER -->
-<footer class="bg-gray-900 dark:bg-black text-gray-300 py-14">
-    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-10">
+<footer class="relative overflow-hidden bg-black text-white">
 
-        <div>
-            <h3 class="text-white font-bold text-xl">ElectroShop</h3>
-            <p class="mt-3 text-sm text-gray-400">
-                Your trusted store for modern electronics.
+    <div class="max-w-7xl mx-auto px-6 py-20">
+
+        <div class="grid lg:grid-cols-4 gap-12">
+
+            <!-- BRAND -->
+            <div>
+
+                <div class="flex items-center gap-3">
+
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-2xl font-bold shadow-lg">
+                        E
+                    </div>
+
+                    <div>
+                        <h2 class="text-2xl font-extrabold">
+                            ElectroShop
+                        </h2>
+
+                        <p class="text-sm text-gray-400">
+                            Modern Electronics Store
+                        </p>
+                    </div>
+
+                </div>
+
+                <p class="mt-6 text-gray-400 leading-relaxed">
+                    Discover premium electronics, gadgets, laptops,
+                    smartphones and accessories with unbeatable prices
+                    and fast delivery.
+                </p>
+
+            </div>
+
+            <!-- QUICK LINKS -->
+            <div>
+
+                <h3 class="text-xl font-bold mb-6">
+                    Quick Links
+                </h3>
+
+                <ul class="space-y-4 text-gray-400">
+
+                    <li>
+                        <a href="{{ route('home') }}"
+                            class="hover:text-white transition">
+                            Home
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('shop') }}"
+                            class="hover:text-white transition">
+                            Products
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('contact') }}"
+                            class="hover:text-white transition">
+                            Contact
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('cart') }}"
+                            class="hover:text-white transition">
+                            Cart
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('contact') }}"
+                            class="hover:text-white transition">
+                            Contact
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+            <!-- CATEGORIES -->
+            <div>
+
+                <h3 class="text-xl font-bold mb-6">
+                    Categories
+                </h3>
+
+                <ul class="space-y-4 text-gray-400">
+
+                    @foreach($categories->take(5) as $category)
+
+                    <li>
+
+                        <a href="{{ route('category.show', $category->id) }}"
+                            class="hover:text-white transition">
+
+                            {{ $category->name }}
+
+                        </a>
+
+                    </li>
+
+                    @endforeach
+
+                </ul>
+
+            </div>
+
+            <!-- NEWSLETTER -->
+            <div>
+
+                <h3 class="text-xl font-bold mb-6">
+                    Newsletter
+                </h3>
+
+                <p class="text-gray-400 mb-6">
+                    Subscribe to receive latest offers, discounts and updates.
+                </p>
+
+                <form class="space-y-4">
+
+                    <input type="email"
+                        placeholder="Enter your email"
+                        class="w-full px-5 py-4 rounded-2xl bg-gray-900 border border-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none transition">
+
+                    <button
+                        class="w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 transition font-semibold shadow-lg">
+
+                        Subscribe Now
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- BOTTOM -->
+    <div class="border-t border-gray-900">
+
+        <div
+            class="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+
+            <p class="text-gray-500 text-sm">
+                © {{ date('Y') }} ElectroShop. All rights reserved.
             </p>
-        </div>
 
-        <div>
-            <h4 class="text-white font-semibold mb-4">Quick Links</h4>
-            <ul class="space-y-2 text-sm">
-                <li><a class="hover:text-white" href="#">Home</a></li>
-                <li><a class="hover:text-white" href="#">Shop</a></li>
-                <li><a class="hover:text-white" href="#">About</a></li>
-                <li><a class="hover:text-white" href="#">Contact</a></li>
-            </ul>
-        </div>
+            <div class="flex items-center gap-6 text-sm text-gray-500">
 
-        <div>
-            <h4 class="text-white font-semibold mb-4">Newsletter</h4>
+                <a href="#"
+                    class="hover:text-white transition">
+                    Privacy Policy
+                </a>
 
-            <input type="email" placeholder="Enter email"
-                   class="w-full p-3 rounded-xl bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-blue-500">
+                <a href="#"
+                    class="hover:text-white transition">
+                    Terms & Conditions
+                </a>
 
-            <button class="mt-3 w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-xl transition">
-                Subscribe
-            </button>
+                <a href="#"
+                    class="hover:text-white transition">
+                    Support
+                </a>
+
+            </div>
+
         </div>
 
     </div>
 
-    <div class="text-center text-sm mt-10 border-t border-gray-800 pt-6 text-gray-500">
-        © {{ date('Y') }} ElectroShop. All rights reserved.
+    <div
+        class="absolute top-0 right-0 w-96 h-96 bg-blue-600/10 blur-3xl rounded-full">
     </div>
+
 </footer>
-
-</div>
 
 @endsection

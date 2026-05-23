@@ -20,6 +20,7 @@ class RiderController extends Controller
     public function delivered(Order $order)
     {
         if ($order->delivery_user_id != auth()->id()) {
+        return redirect()->route('auth');
 
 
         }

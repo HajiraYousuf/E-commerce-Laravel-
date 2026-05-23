@@ -66,6 +66,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class, 'delivery_user_id');
     }
+    public function cartItems()
+    {
+        return $this->hasMany(Cart::class);
+    }
      protected static function booted()
     {
         static::created(function ($user) {

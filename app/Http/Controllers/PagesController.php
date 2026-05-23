@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Activity;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Product;
 
@@ -95,12 +96,5 @@ class PagesController extends Controller
         ->values();
 
     return view('admin.users.user-activity', compact('activities', 'users'));
-}
-public function home()
-{
-    $featuredProducts = Product::latest()->take(8)->get();
-    $latestProducts = Product::latest()->skip(8)->take(6)->get();
-
-    return view('components.user.Pages.home', compact('featuredProducts', 'latestProducts'));
 }
 }

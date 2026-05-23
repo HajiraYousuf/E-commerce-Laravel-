@@ -1,63 +1,162 @@
-  @extends('components.user.layouts.app')
+@extends('components.user.layouts.app')
 
 @section('content')
-<div class="bg-[#0b0f1a] min-h-screen text-white font-sans py-16">
-    <div class="container mx-auto px-6 max-w-xl">
-        
-        <div class="bg-[#111827]/60 border border-gray-800 rounded-3xl p-8 shadow-2xl backdrop-blur-md">
-            <h2 class="text-2xl font-black text-center text-white uppercase tracking-tight mb-2">
-                Complete Your Order
-            </h2>
-            <p class="text-gray-400 text-xs text-center mb-8">Fadlan buuxi foomka hoose si lagugu soo raddo alaabtaada.</p>
 
-            <form action="#" method="POST" class="space-y-5">
+<div class="max-w-6xl mx-auto px-4 py-8">
+{{-- SUCCESS MESSAGE --}}
+@if(session('success'))
+    <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
+        {{ session('success') }}
+    </div>
+@endif
+
+{{-- ERROR MESSAGE --}}
+@if(session('error'))
+    <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+        {{ session('error') }}
+    </div>
+@endif
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        {{-- ================= CART ================= --}}
+        <div class="bg-white dark:bg-gray-900 dark:text-white shadow rounded-xl p-5">
+
+            <h2 class="text-2xl font-bold mb-4">🛒 Your Cart</h2>
+
+            @forelse($cartItems as $item)
+                <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 py-3">
+
+                    <div>
+                        <h4 class="font-semibold">
+                            {{ optional($item->product)->name }}
+                        </h4>
+
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            ${{ optional($item->product)->price }} × {{ $item->quantity }}
+                        </p>
+                    </div>
+
+                    <div class="font-bold">
+                        ${{ optional($item->product)->price * $item->quantity }}
+                    </div>
+
+                </div>
+            @empty
+                <p class="text-gray-500">Cart is empty</p>
+            @endforelse
+
+        </div>
+
+        {{-- ================= CHECKOUT ================= --}}
+        <div class="bg-white dark:bg-gray-900 dark:text-white shadow rounded-xl p-5">
+
+            <h2 class="text-2xl font-bold mb-4">Checkout</h2>
+
+            <form action="{{ route('place.order') }}" method="POST">
                 @csrf
-                
-                <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase mb-2 tracking-wide">✅ User Name</label>
-                    <input type="text" name="username" required placeholder="Geli magacaaga oo buuxa" 
-                           class="w-full bg-[#0b0f1a] border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors">
+
+                {{-- NAME --}}
+                <div class="mb-3">
+                    <label class="block mb-1">Name</label>
+                    <input type="text" name="name"
+                        class="w-full border dark:border-gray-700 dark:bg-gray-800 p-2 rounded"
+                        required>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase mb-2 tracking-wide">✅ Phone Number</label>
-                    <input type="tel" name="phone" required placeholder="Tusaale: +252 63 XXXXXXX" 
-                           class="w-full bg-[#0b0f1a] border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors">
+                {{-- PHONE --}}
+                <div class="mb-3">
+                    <label class="block mb-1">Phone</label>
+                    <input type="text" name="phone"
+                        class="w-full border dark:border-gray-700 dark:bg-gray-800 p-2 rounded"
+                        required>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase mb-2 tracking-wide">✅ Location / Address</label>
-                    <input type="text" name="location" required placeholder="Magaalada iyo Xaafada aad joogto" 
-                           class="w-full bg-[#0b0f1a] border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors">
+                {{-- ADDRESS --}}
+                <div class="mb-3">
+                    <label class="block mb-1">Address</label>
+                    <textarea name="address"
+                        class="w-full border dark:border-gray-700 dark:bg-gray-800 p-2 rounded"
+                        required></textarea>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase mb-2 tracking-wide">✅ Product Selected</label>
-                    <input type="text" name="product" value="{{ $productName }}" readonly 
-                           class="w-full bg-gray-900/50 border border-gray-800 rounded-xl px-4 py-3 text-sm text-blue-400 font-bold focus:outline-none cursor-not-allowed">
+                {{-- PAYMENT --}}
+                <div class="mb-4">
+                    <label class="block mb-1">Payment Method</label>
+
+                    <select name="payment_method" id="payment_method"
+                        class="w-full border dark:border-gray-700 dark:bg-gray-800 p-2 rounded"
+                        required>
+
+                        <option value="">Select payment</option>
+                        <option value="cash">Cash</option>
+                        <option value="credit">Credit</option>
+                        <option value="other">Other</option>
+
+                    </select>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase mb-2 tracking-wide">✅ Delivery or Pickup</label>
-                    <div class="grid grid-cols-2 gap-4">
-                        <label class="flex items-center justify-center gap-2 border border-gray-800 rounded-xl p-3 cursor-pointer hover:bg-blue-600/5 has-[:checked]:border-blue-500 has-[:checked]:bg-blue-600/10 transition-all">
-                            <input type="radio" name="shipping_method" value="delivery" checked class="accent-blue-500">
-                            <span class="text-xs font-bold">🚚 Delivery</span>
-                        </label>
-                        
-                        <label class="flex items-center justify-center gap-2 border border-gray-800 rounded-xl p-3 cursor-pointer hover:bg-blue-600/5 has-[:checked]:border-blue-500 has-[:checked]:bg-blue-600/10 transition-all">
-                            <input type="radio" name="shipping_method" value="pickup" class="accent-blue-500">
-                            <span class="text-xs font-bold">🏬 Pickup Store</span>
-                        </label>
+                {{-- ================= ORDER SUMMARY ================= --}}
+                <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded mb-5">
+
+                    <div class="flex justify-between">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">${{ $subtotal }}</span>
+                    </div>
+
+                    <div class="flex justify-between">
+                        <span>Shipping:</span>
+                        <span id="shipping">${{ $shipping }}</span>
+                    </div>
+
+                    <div class="flex justify-between">
+                        <span>Tax (5%):</span>
+                        <span id="tax">${{ number_format($tax, 2) }}</span>
+                    </div>
+
+                    <hr class="my-2 border-gray-300 dark:border-gray-600">
+
+                    <div class="flex justify-between font-bold">
+                        <span>Total:</span>
+                        <span id="total">${{ number_format($total, 2) }}</span>
                     </div>
                 </div>
 
-                <button type="submit" class="w-full mt-4 py-4 bg-blue-600 hover:bg-blue-500 text-xs font-black text-white rounded-xl uppercase tracking-widest transition-all shadow-lg shadow-blue-900/20 active:scale-95">
-                    Confirm Order (Gudbi Dalabka) 📦
+                {{-- BUTTON --}}
+                <button type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg transition">
+                    Place Order
                 </button>
-            </form>
 
+            </form>
         </div>
     </div>
 </div>
+
+{{-- ================= LIVE UPDATE SCRIPT ================= --}}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const payment = document.getElementById('payment_method');
+
+    payment.addEventListener('change', function () {
+
+        let subtotal = {{ $subtotal }};
+        let tax = subtotal * 0.05;
+
+        let shipping = 0;
+
+        if (this.value === 'cash') {
+            shipping = 5;
+        }
+
+        let total = subtotal + shipping + tax;
+
+        document.getElementById('shipping').innerText = "$" + shipping;
+        document.getElementById('tax').innerText = "$" + tax.toFixed(2);
+        document.getElementById('total').innerText = "$" + total.toFixed(2);
+    });
+
+});
+</script>
+
 @endsection
