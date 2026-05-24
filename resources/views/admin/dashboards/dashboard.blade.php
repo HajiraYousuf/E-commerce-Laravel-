@@ -6,7 +6,7 @@
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
         <div class="xl:col-span-2">
-            <x-admin.dashboard.revenue-chart :revenueData="$revenueData"/>
+            <x-admin.dashboard.revenue-chart :revenueChart="$revenueChart"/>
         </div>
 
         <div class="space-y-6">

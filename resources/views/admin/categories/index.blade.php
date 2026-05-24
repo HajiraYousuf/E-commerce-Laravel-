@@ -25,15 +25,31 @@
     </div>
 
     <!-- Search -->
-    <div class="mb-6">
-        <input type="text" placeholder="Search by category name..."
-               class="w-full md:w-1/3 px-4 py-2 border rounded-xl 
-               bg-white dark:bg-gray-800 
-               text-gray-700 dark:text-white
-               border-gray-200 dark:border-gray-700
-               focus:ring-2 focus:ring-indigo-500 outline-none">
+    <!-- Search -->
+<form method="GET" action="{{ route('categories.index') }}" class="mb-6">
+
+    <div class="flex gap-3">
+
+        <input
+            type="text"
+            name="search"
+            value="{{ request('search') }}"
+            placeholder="Search by category name..."
+            class="w-full md:w-1/3 px-4 py-2 border rounded-xl 
+            bg-white dark:bg-gray-800 
+            text-gray-700 dark:text-white
+            border-gray-200 dark:border-gray-700
+            focus:ring-2 focus:ring-indigo-500 outline-none">
+
+        <button type="submit"
+            class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl">
+
+            Search
+        </button>
+
     </div>
 
+</form>
     <!-- Table -->
     <div class="bg-white dark:bg-gray-900 rounded-2xl shadow overflow-hidden">
 

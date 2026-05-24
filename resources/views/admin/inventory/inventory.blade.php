@@ -90,21 +90,27 @@ $statusColors = [
         <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
 
             <!-- SEARCH -->
-            <form method="GET">
+           <form method="GET" action="{{ route('admin.inventory') }}" class="flex gap-2">
 
-                <input type="text"
-                       name="search"
-                       value="{{ request('search') }}"
-                       placeholder="Search products..."
-                       class="w-full sm:w-72 px-5 py-3 rounded-xl
-                              bg-white dark:bg-[#0B1220]
-                              border border-gray-200 dark:border-[#1E293B]
-                              text-gray-900 dark:text-white
-                              placeholder-gray-400 dark:placeholder-gray-500
-                              focus:outline-none focus:ring-2 focus:ring-indigo-500">
+    <input type="text"
+           name="search"
+           value="{{ request('search') }}"
+           placeholder="Search products..."
+           class="w-full sm:w-72 px-5 py-3 rounded-xl
+                  bg-white dark:bg-[#0B1220]
+                  border border-gray-200 dark:border-[#1E293B]
+                  text-gray-900 dark:text-white
+                  placeholder-gray-400 dark:placeholder-gray-500
+                  focus:outline-none focus:ring-2 focus:ring-indigo-500">
 
-            </form>
+    <button type="submit"
+            class="px-5 py-3 rounded-xl
+                   bg-indigo-600 text-white
+                   hover:bg-indigo-700 transition">
+        Search
+    </button>
 
+</form>
             <!-- ADD -->
             <a href="{{ route('products.create') }}"
                class="px-6 py-3 rounded-xl
@@ -280,24 +286,20 @@ $statusColors = [
 
                             <!-- DELETE -->
                             <form action="{{ route('products.destroy', $product->id) }}"
-                                  method="POST">
+                                method="POST"
+                                onsubmit="return confirm('Are you sure you want to delete this product?');">
 
                                 @csrf
                                 @method('DELETE')
 
                                 <button type="submit"
-                                        class="p-2 rounded-lg
-                                               bg-red-500/10 text-red-600
-                                               hover:bg-red-600 hover:text-white
-                                               hover:shadow-lg hover:scale-105
-                                               transition duration-200">
+                                        class="p-2 rounded-lg bg-red-500/10 text-red-600 hover:bg-red-600 hover:text-white hover:shadow-lg hover:scale-105 transition duration-200">
 
                                     <i class="ri-delete-bin-6-line text-lg"></i>
 
                                 </button>
 
                             </form>
-
                         </div>
 
                     </td>

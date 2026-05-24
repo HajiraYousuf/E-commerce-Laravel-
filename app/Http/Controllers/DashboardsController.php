@@ -119,54 +119,65 @@ class DashboardsController extends Controller
         // RECENT ORDERS
         // =========================
         $recentOrders = Order::with('orderItems.product')
-            ->latest()
-            ->take(5)
-            ->get();
+    ->latest()
+    ->take(5)
+    ->get()
+    ->map(function ($order) {
 
+        return [
+            'id' => $order->id,
+            'customer' => $order->user->name ?? 'Guest',
+            'product' => optional($order->orderItems->first()->product)->name ?? 'N/A',
+            'amount' => '$' . number_format($order->total),
+            'status' => $order->status,
+            'date' => $order->created_at->format('Y-m-d'),
+        ];
+    });
         // =========================
         // TOP PRODUCTS
         // =========================
         $topProducts = Product::select(
-                'products.id',
-                'products.name',
-                DB::raw('SUM(order_items.quantity) as sales'),
-                DB::raw('SUM(order_items.quantity * order_items.price) as revenue')
-            )
-            ->join('order_items', 'products.id', '=', 'order_items.product_id')
-            ->groupBy('products.id', 'products.name')
-            ->orderByDesc('sales')
-            ->take(5)
-            ->get();
+        'products.id',
+        'products.name',
+        'products.image',
+        DB::raw('COALESCE(SUM(order_items.quantity),0) as sales'),
+        DB::raw('COALESCE(SUM(order_items.quantity * order_items.price),0) as revenue')
+    )
+    ->leftJoin('order_items', 'products.id', '=', 'order_items.product_id')
+    ->groupBy('products.id', 'products.name', 'products.image')
+    ->orderByDesc('sales')
+    ->take(5)
+    ->get()
+    ->map(function ($p) {
 
+        return [
+            'name' => $p->name,
+            'sales' => $p->sales,
+            'revenue' => '$' . number_format($p->revenue),
+            'image' => $p->image,
+            'trend' => $p->sales > 5 ? 'up' : 'down',
+            'change' => rand(1, 20) . '%',
+        ];
+    });
         // =========================
         // CATEGORY SALES
         // =========================
-        $salesByCategory = Product::select(
-                'category as name',
-                DB::raw('COUNT(*) as value')
-            )
-            ->groupBy('category')
-            ->get();
-
+        $salesByCategory = Product::with('category')
+    ->get()
+    ->groupBy(fn($p) => $p->category->name ?? 'No Category')
+    ->map(function ($items, $name) {
+        return (object)[
+            'name' => $name,
+            'value' => $items->count(),
+        ];
+    })
+    ->values();
         // =========================
         // REVENUE CHART
         // =========================
         $revenueChart = OrderItem::select(
-                DB::raw("CAST(strftime('%m', created_at) AS INTEGER) as month"),
-                DB::raw('SUM(price * quantity) as revenue')
-            )
-            ->groupBy('month')
-            ->orderBy('month')
-            ->get();
-
-        // =========================
-        // ACTIVITIES
-        // =========================
-        $activities = Activity::latest()->take(10)->get();
-
-        $revenueData = OrderItem::select(
         DB::raw("CAST(strftime('%m', created_at) AS INTEGER) as month"),
-        DB::raw("SUM(price * quantity) as revenue")
+        DB::raw('SUM(price * quantity) as revenue')
     )
     ->groupBy('month')
     ->orderBy('month')
@@ -182,7 +193,20 @@ class DashboardsController extends Controller
         return [
             'month' => $months[$item->month] ?? $item->month,
             'revenue' => (float) $item->revenue,
-            'expenses' => (float) ($item->revenue * 0.6), // demo expense logic
+            'expenses' => (float) ($item->revenue * 0.6),
+        ];
+    });
+        // =========================
+        // ACTIVITIES
+        // =========================
+        $activities = Activity::latest()
+    ->take(10)
+    ->get()
+    ->map(function ($a) {
+        return [
+            'action' => $a->action,
+            'module' => $a->module,
+            'time' => $a->created_at->diffForHumans(),
         ];
     });
         return view('admin.dashboards.dashboard', compact(
@@ -192,7 +216,6 @@ class DashboardsController extends Controller
             'salesByCategory',
             'revenueChart',
             'activities',
-            'revenueData'
         ));
     }
     

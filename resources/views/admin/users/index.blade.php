@@ -27,7 +27,7 @@
                     <th class="px-6 py-4 text-xs font-semibold uppercase text-gray-500 dark:text-slate-400">Orders</th>
                     <th class="px-6 py-4 text-xs font-semibold uppercase text-gray-500 dark:text-slate-400">Total Spent</th>
                     <th class="px-6 py-4 text-xs font-semibold uppercase text-gray-500 dark:text-slate-400">Joined</th>
-                    <th class="px-6 py-4 text-xs font-semibold uppercase text-gray-500 dark:text-slate-400 text-center">Actions</th>
+                    {{-- <th class="px-6 py-4 text-xs font-semibold uppercase text-gray-500 dark:text-slate-400 text-center">Actions</th> --}}
                 </tr>
             </thead>
 
@@ -98,8 +98,7 @@
 
                     {{-- SPENT --}}
                     <td class="px-6 py-5 font-semibold text-emerald-600 dark:text-emerald-400">
-                        ${{ $user->spent ?? 0 }}
-                    </td>
+                        ${{ $user->orders->sum('total') }}                    </td>
 
                     {{-- JOINED --}}
                     <td class="px-6 py-5 text-sm text-gray-500 dark:text-slate-400">

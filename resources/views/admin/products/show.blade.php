@@ -92,7 +92,7 @@
                 </span>
 
                 <span class="px-3 py-1 text-xs rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300">
-                    {{ $product->category }}
+                    {{ $product->category->name }}
                 </span>
             </div>
 

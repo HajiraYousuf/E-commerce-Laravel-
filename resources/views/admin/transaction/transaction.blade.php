@@ -11,7 +11,6 @@ $stats = [
         'subtitle' => 'All time',
         'color' => 'indigo',
         'icon' => 'ri-exchange-dollar-line',
-        'chart' => [12,18,15,22,19,26,30]
     ],
 
     [
@@ -21,7 +20,6 @@ $stats = [
         'subtitle' => 'Completed payments',
         'color' => 'emerald',
         'icon' => 'ri-money-dollar-circle-line',
-        'chart' => [8,12,14,16,22,28,35]
     ],
 
     [
@@ -31,7 +29,6 @@ $stats = [
         'subtitle' => 'Pending payments',
         'color' => 'amber',
         'icon' => 'ri-time-line',
-        'chart' => [18,14,17,13,16,12,15]
     ],
 
     [
@@ -41,7 +38,6 @@ $stats = [
         'subtitle' => 'Refunded payments',
         'color' => 'rose',
         'icon' => 'ri-refund-2-line',
-        'chart' => [4,6,5,8,7,6,9]
     ],
 
 ];
@@ -184,9 +180,6 @@ $colors = [
 
             </div>
 
-            <div class="mt-5 h-[70px]">
-                <canvas id="chart_{{ $stat['id'] }}"></canvas>
-            </div>
 
         </div>
 
@@ -277,40 +270,31 @@ $colors = [
                             </span>
 
                         </td>
-
+                                                
                         <!-- CUSTOMER -->
                         <td class="px-6 py-5">
-
                             <div class="flex items-center gap-3">
 
-                                <img src="{{ $transaction->customer_avatar }}"
-                                     class="w-11 h-11 rounded-2xl object-cover">
-
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($transaction->order->user->name ?? 'Guest') }}"
+                                    class="w-11 h-11 rounded-2xl object-cover">
                                 <div>
-
                                     <h3 class="font-medium text-gray-900 dark:text-white">
-
-                                        {{ $transaction->customer_name }}
-
+                                        {{ $transaction->order->user->name ?? 'Guest' }}
                                     </h3>
 
                                     <p class="text-sm text-gray-500 dark:text-slate-400">
-
-                                        {{ $transaction->customer_email }}
-
+                                        {{ $transaction->order->user->email ?? '' }}
                                     </p>
-
                                 </div>
 
                             </div>
-
                         </td>
 
                         <!-- PRODUCT -->
                         <td class="px-6 py-5 text-gray-700 dark:text-slate-300">
-
-                            {{ $transaction->product_name }}
-
+                            @foreach($transaction->order->orderItems as $item)
+                                {{ $item->product->name }} <br>
+                            @endforeach
                         </td>
 
                         <!-- AMOUNT -->
@@ -363,24 +347,21 @@ $colors = [
                         <!-- DATE -->
                         <td class="px-6 py-5">
 
-                            <div>
+    <div>
 
-                                <h4 class="font-medium text-gray-900 dark:text-white">
+        <h4 class="font-medium text-gray-900 dark:text-white">
 
-                                    {{ \Carbon\Carbon::parse($transaction->transaction_date)->format('M d, Y') }}
+{{ $transaction->created_at->timezone('Africa/Mogadishu')->format('M d, Y') }}
+        </h4>
 
-                                </h4>
+        <p class="text-sm text-gray-500 dark:text-slate-400">
 
-                                <p class="text-sm text-gray-500 dark:text-slate-400">
+{{ $transaction->created_at->timezone('Africa/Mogadishu')->format('h:i A') }}
+        </p>
 
-                                    {{ \Carbon\Carbon::parse($transaction->transaction_date)->format('h:i A') }}
+    </div>
 
-                                </p>
-
-                            </div>
-
-                        </td>
-
+</td>
                     </tr>
 
                     @empty

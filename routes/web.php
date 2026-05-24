@@ -40,7 +40,6 @@ Route::post('/wishlist/toggle/{id}', [WishlistController::class, 'store'])
 Route::get('/wishlist', [WishlistController::class, 'index'])
     ->name('wishlist.index');
 Route::get('/', [HomeController::class, 'home'])
-    ->middleware('auth')
     ->name('home');
 
 Route::get('/shop', [HomeController::class, 'shop'])
@@ -105,6 +104,11 @@ Route::get('/admin/overview', [OverviewController::class, 'overview'])->name('ad
 Route::get('/admin/analytics/data', [OverviewController::class, 'analyticsData'])->middleware(['auth', 'admin']);
 Route::get('/overview/export',[OverviewController::class,'export'])->middleware(['auth', 'admin'])
     ->name('overview.export');
+Route::get('/order/export',[OrderController::class,'export'])->middleware(['auth', 'admin'])
+    ->name('order.export');
+Route::get('/admin/products/export',[ProductController::class,'export'])->middleware(['auth', 'admin'])
+    ->name('admin.products.export'); 
+       
 Route::get('/admin/report', [ReportController::class, 'report'])->name('admin.report')->middleware(['auth', 'admin']);
 Route::get('/admin/inventory', [PagesController::class, 'inventroy'])->name('admin.inventory')->middleware(['auth', 'admin']);
 Route::get('/admin/transaction', [TransactionController::class, 'index'])->name('admin.transaction')->middleware(['auth', 'admin']);
@@ -129,10 +133,8 @@ Route::prefix('admin')
 
         Route::resource('orders', OrderController::class);
 
-        Route::post(
-            '/orders/{order}/update-status',
-            [OrderController::class, 'updateStatus']
-        )->name('orders.updateStatus');
+        Route::post('/orders/{order}/update-status', [OrderController::class, 'updateStatus'])
+            ->name('orders.updateStatus');
 
     });
 Route::post('/notifications/read', function () {

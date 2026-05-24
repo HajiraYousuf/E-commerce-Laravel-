@@ -39,10 +39,10 @@
                         class="px-4 py-2 rounded-full text-xs font-bold
                         @if($order->status == 'pending') bg-yellow-100 text-yellow-600
                         @elseif($order->status == 'shipped') bg-blue-100 text-blue-600
-                        @elseif($order->status == 'delivered') bg-green-100 text-green-600
+                        @elseif($order->status == 'Delivered') bg-green-100 text-green-600
                         @else bg-red-100 text-red-600 @endif">
 
-                        {{ ucfirst($order->status) }}
+                        {{ $order->status }}
 
                     </span>
 

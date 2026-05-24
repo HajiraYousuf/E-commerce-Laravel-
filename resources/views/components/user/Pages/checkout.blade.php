@@ -70,6 +70,14 @@
                         class="w-full border dark:border-gray-700 dark:bg-gray-800 p-2 rounded"
                         required>
                 </div>
+                {{-- COUNTRY --}}
+                <div class="mb-3">
+                    <label class="block mb-1">Country</label>
+
+                    <input type="text"
+                        name="country"
+                        class="w-full border dark:border-gray-700 dark:bg-gray-800 p-2 rounded">
+                </div>
 
                 {{-- ADDRESS --}}
                 <div class="mb-3">

@@ -46,7 +46,7 @@
 
             <div class="flex justify-center">
 
-                <img src="{{ asset('images/image1.jpg') }}"
+                <img src="{{ asset('images/image11.jpg') }}"
                     class="w-full max-w-xl drop-shadow-2xl hover:scale-105 transition duration-500">
 
             </div>
@@ -188,9 +188,7 @@
                 <div class="h-52 overflow-hidden">
 
 <img
-    src="{{ Str::startsWith($category->image, 'http')
-        ? $category->image
-        : asset('storage/' . $category->image) }}"
+    src="{{asset('storage/' . $category->image) }}"
     alt="{{ $category->name }}"
     class="w-full h-64 object-cover">
                 </div>
@@ -265,11 +263,10 @@
 
                 <div class="relative overflow-hidden">
                     <img
-                        src="{{ Str::startsWith($product->image, 'http')
-                            ? $product->image
-                            : asset('storage/' . $product->image) }}"
-                        alt="{{ $product->name }}"
-                        class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">                    <div
+                        src="{{ asset('storage/' . $product->image) }}"    
+                    alt="{{ $product->name }}"
+                        class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">  
+                      <div
                         class="absolute top-4 left-4 px-3 py-1 rounded-full bg-blue-600 text-white text-xs font-semibold shadow">
                         🔥 Best Seller
                     </div>

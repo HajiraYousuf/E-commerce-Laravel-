@@ -54,7 +54,7 @@
 
                     <td class="py-3">
                         <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300">
-                            {{ $p['category'] }}
+                            {{ $p['category']->name ?? 'No Category' }}
                         </span>
                     </td>
 

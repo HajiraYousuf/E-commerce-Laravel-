@@ -486,50 +486,54 @@ foreach ($period as $date) {
         */
 
         $salesColors = [
-            '#3b82fe',
-            '#8b5cf6',
-            '#10b981',
-            '#f59e0b',
-            '#ef4444',
-            '#06b6d4',
+    '#3b82f6',
+    '#8b5cf6',
+    '#10b981',
+    '#f59e0b',
+    '#ef4444',
+    '#06b6d4',
+];
+
+$totalSold = DB::table('order_items')
+    ->sum('quantity');
+
+$salesData = DB::table('order_items')
+
+    ->join('products', 'order_items.product_id', '=', 'products.id')
+
+    ->join('categories', 'products.category_id', '=', 'categories.id')
+
+    ->select(
+        'categories.name as name',
+
+        DB::raw('SUM(order_items.quantity) as qty'),
+
+        DB::raw('SUM(order_items.quantity * order_items.price) as total')
+    )
+
+    ->groupBy('categories.name')
+
+    ->get()
+
+    ->map(function ($item, $index)
+    use ($totalSold, $salesColors) {
+
+        return [
+
+            'name' => $item->name,
+
+            'value' => $totalSold > 0
+                ? round(($item->qty / $totalSold) * 100)
+                : 0,
+
+            'total' => (float) $item->total,
+
+            'color' => $salesColors[
+                $index % count($salesColors)
+            ],
+
         ];
-
-        $totalSales = Sale::whereBetween(
-            'created_at',
-            [$start, $end]
-        )->sum('quantity');
-
-        $salesData = Sale::whereBetween(
-                'created_at',
-                [$start, $end]
-            )
-            ->select(
-                'category as name',
-                DB::raw('SUM(quantity) as qty'),
-                DB::raw('SUM(total) as total')
-            )
-            ->groupBy('category')
-            ->get()
-            ->map(function ($item, $index)
-            use ($totalSales, $salesColors) {
-
-                return [
-
-                    'name' => $item->name,
-
-                    'value' => $totalSales > 0
-                        ? round(($item->qty / $totalSales) * 100)
-                        : 0,
-
-                    'total' => (float) $item->total,
-
-                    'color' => $salesColors[
-                        $index % count($salesColors)
-                    ],
-
-                ];
-            });
-
+    });
         /*
         |--------------------------------------------------------------------------
         | TRAFFIC

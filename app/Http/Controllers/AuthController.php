@@ -48,52 +48,47 @@ class AuthController extends Controller
             
         Auth::login($user);
 
-        return redirect()->route('dashboard');
+        return redirect()->route('home');
     }
 
     // LOGIN
     public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string'
-        ]);
+{
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required|string'
+    ]);
 
-         if (Auth::attempt($credentials)) {
+    if (Auth::attempt($credentials)) {
+
         $request->session()->regenerate();
 
         $user = Auth::user();
 
-        // previous page kaydi
-        $redirectTo = url()->previous();
-
-        // hubi in previous URL uu yahay login/auth page
-        if (
-            str_contains($redirectTo, '/auth') ||
-            str_contains($redirectTo, '/login') ||
-            $redirectTo === url('/')
-        ) {
-            $redirectTo = null;
-        }
-
         // ADMIN
         if ($user->role === 'admin') {
-            return $redirectTo
-                ? redirect()->intended($redirectTo)
-                : redirect()->route('admin.dashboard');
+            return redirect()->intended(
+                route('admin.dashboard')
+            );
+        }
+
+        // RIDER
+        if ($user->role === 'rider') {
+            return redirect()->intended(
+                route('rider.orders')
+            );
         }
 
         // USER
-        return $redirectTo
-            ? redirect()->intended($redirectTo)
-            : redirect('/dashboard');
+        return redirect()->intended(
+            route('home')
+        );
     }
 
-        return back()->withErrors([
-            'email' => 'Invalid email or password',
-            'password' =>'Invalid email or password'
-        ]);
-    }
+    return back()->withErrors([
+        'email' => 'Invalid email or password',
+    ])->withInput();
+}
 
     // LOGOUT
     public function logout(Request $request)

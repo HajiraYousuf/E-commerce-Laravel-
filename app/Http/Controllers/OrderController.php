@@ -9,15 +9,94 @@ use App\Notifications\OrderNotification;
 
 class OrderController extends Controller
 {
-    public function index()
-    {
-        $orders = Order::with('user', 'orderItems')
-            ->latest()
-            ->get();
+    public function index(Request $request)
+{
+    $orders = Order::with(['user', 'orderItems'])
 
-        return view('admin.orders.index', compact('orders'));
-    }
+        // ================= SEARCH =================
+        ->when($request->search, function ($query) use ($request) {
 
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+
+                $q->where('id', 'like', "%{$search}%")
+                  ->orWhere('name', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%");
+
+            });
+
+        })
+
+        // ================= STATUS FILTER =================
+        ->when($request->status, function ($query) use ($request) {
+
+            $query->whereRaw(
+                'LOWER(status) = ?',
+                [strtolower($request->status)]
+            );
+
+        })
+
+
+        // ================= ORDER =================
+        ->latest()
+
+        // ================= PAGINATION =================
+        ->paginate(10)
+
+        ->withQueryString();
+
+    return view('admin.orders.index', compact('orders'));
+}
+public function export()
+{
+    $orders = Order::with(['user', 'orderItems.product'])
+        ->latest()
+        ->get();
+
+    $fileName = 'orders-report-' . now()->format('Y-m-d-H-i-s') . '.csv';
+
+    return response()->streamDownload(function () use ($orders) {
+
+        $handle = fopen('php://output', 'w');
+
+        // HEADER
+        fputcsv($handle, [
+            'Order ID',
+            'Customer Name',
+            'Email',
+            'Products',
+            'Total',
+            'Status',
+            'Payment Method',
+            'Date',
+        ]);
+
+        foreach ($orders as $order) {
+
+            $products = $order->orderItems->map(function ($item) {
+                return $item->product->name ?? 'N/A';
+            })->implode(', ');
+
+            fputcsv($handle, [
+                $order->id,
+                $order->user->name ?? 'Unknown',
+                $order->user->email ?? '-',
+                $products,
+                $order->total,
+                $order->status,
+                $order->payment_method,
+                $order->created_at->format('M d, Y h:i A'),
+            ]);
+        }
+
+        fclose($handle);
+
+    }, $fileName, [
+        'Content-Type' => 'text/csv',
+    ]);
+}
     public function show(Order $order)
     {
         $order->load('orderItems.product');

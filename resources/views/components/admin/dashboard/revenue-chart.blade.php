@@ -38,7 +38,9 @@
 
 {{-- IMPORTANT: PASS PHP TO JS --}}
 <script>
-    const revenueData = @json($revenueData ?? []);
+document.addEventListener("DOMContentLoaded", function () {
+
+    const revenueData = @json($revenueChart ?? []);
 
     const labels = revenueData.map(item => item.month);
     const revenue = revenueData.map(item => item.revenue);
@@ -46,48 +48,32 @@
 
     const ctx = document.getElementById('revenueChart');
 
-    if (ctx) {
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Revenue',
-                        data: revenue,
-                        backgroundColor: '#3b82f6',
-                        borderRadius: 6
-                    },
-                    {
-                        label: 'Expenses',
-                        data: expenses,
-                        backgroundColor: '#64748b',
-                        borderRadius: 6
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return '$' + context.raw.toLocaleString();
-                            }
-                        }
-                    }
+    if (!ctx) return;
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Revenue',
+                    data: revenue,
+                    backgroundColor: '#3b82f6',
+                    borderRadius: 6
                 },
-                scales: {
-                    y: {
-                        ticks: {
-                            callback: function(value) {
-                                return '$' + (value / 1000) + 'k';
-                            }
-                        }
-                    }
+                {
+                    label: 'Expenses',
+                    data: expenses,
+                    backgroundColor: '#64748b',
+                    borderRadius: 6
                 }
-            }
-        });
-    }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+});
 </script>

@@ -7,9 +7,23 @@ use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::latest()->get();
+         $query = Category::withCount('products');
+
+    // 🔍 SEARCH
+    if ($request->filled('search')) {
+
+        $query->where(function ($q) use ($request) {
+
+            $q->where('name', 'like', '%' . $request->search . '%')
+              ->orWhere('slug', 'like', '%' . $request->search . '%')
+              ->orWhere('description', 'like', '%' . $request->search . '%');
+
+        });
+    }
+
+    $categories = $query->latest()->paginate(10);
         return view('admin.categories.index', compact('categories'));
     }
 

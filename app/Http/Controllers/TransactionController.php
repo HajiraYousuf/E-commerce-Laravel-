@@ -29,7 +29,7 @@ $totalRevenue = Transaction::where('status', 'completed')->sum('amount');
 
 $pendingAmount = Transaction::where('status', 'pending')->sum('amount');
 
-$refundAmount = Transaction::where('status', 'refunded')->sum('amount');
+$refundAmount = Transaction::where('status', 'canceled')->sum('amount');
     return view('admin.transaction.transaction', compact(
         'transactions',
         'totalTransactions',

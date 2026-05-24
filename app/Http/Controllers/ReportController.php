@@ -123,21 +123,22 @@ class ReportController extends Controller
                 $revenueGrowth
             ),
         ];
-        $topProducts = Product::select('id','name','category','sold','price','cost','image')
-        ->orderBy('sold', 'desc')
-        ->limit(5)
-        ->get()
-        ->map(function ($p) {
-            return [
-                'name' => $p->name,
-                'category' => $p->category,
-                'sold' => $p->sold,
-                'revenue' => '$' . number_format($p->price * $p->sold),
-                'profit' => '$' . number_format(($p->price - $p->cost) * $p->sold),
-                'image' => $p->image,
-            ];
-        });
-        $range = $request->range ?? 'monthly';
+        $topProducts = Product::with('category')
+    ->orderBy('sold', 'desc')
+    ->limit(5)
+    ->get()
+    ->map(function ($p) {
+
+        return [
+            'name' => $p->name,
+            'category' => $p->category,
+            'sold' => $p->sold,
+            'revenue' => '$' . number_format($p->price * $p->sold),
+            'profit' => '$' . number_format(($p->price - $p->cost) * $p->sold),
+            'image' => $p->image,
+        ];
+    });
+    $range = $request->range ?? 'monthly';
 
             $query = Order::query();
 

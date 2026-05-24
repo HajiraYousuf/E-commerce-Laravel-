@@ -19,49 +19,108 @@
             </p>
         </div>
 
-        <button class="h-11 px-5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition flex items-center gap-2 w-fit">
-            <i class="ri-download-2-line"></i>
-            Export Orders
+        <form action="{{ route('order.export') }}" method="GET">
+            <button type="submit"
+                class="h-11 px-5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition flex items-center gap-2 w-fit">
+
+                <i class="ri-download-2-line"></i>
+
+                Export Orders
+            </button>
+        </form>
+
+    </div>
+<form method="GET"
+      class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
+
+    <div class="flex flex-wrap items-center gap-3">
+
+        {{-- ORDER STATUS --}}
+        <div class="relative">
+
+            <select name="status"
+                class="h-11 min-w-[170px] rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-4 pr-10 text-sm font-medium text-gray-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500 appearance-none">
+
+                <option value="">All Status</option>
+
+                <option value="Delivered"
+                    {{ request('status') == 'Delivered' ? 'selected' : '' }}>
+                    Delivered
+                </option>
+
+                <option value="Processing"
+                    {{ request('status') == 'Processing' ? 'selected' : '' }}>
+                    Processing
+                </option>
+
+                <option value="Shipped"
+                    {{ request('status') == 'Shipped' ? 'selected' : '' }}>
+                    Shipped
+                </option>
+
+                <option value="Cancelled"
+                    {{ request('status') == 'Cancelled' ? 'selected' : '' }}>
+                    Cancelled
+                </option>
+
+            </select>
+
+            <i class="ri-arrow-down-s-line absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+
+        </div>
+
+        {{-- PAYMENT STATUS --}}
+        <div class="relative">
+
+            <select name="payment_status"
+                class="h-11 min-w-[170px] rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-4 pr-10 text-sm font-medium text-gray-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500 appearance-none">
+
+                <option value="">Payment Status</option>
+
+                <option value="Paid"
+                    {{ request('payment_status') == 'Paid' ? 'selected' : '' }}>
+                    Paid
+                </option>
+
+                <option value="Pending"
+                    {{ request('payment_status') == 'Pending' ? 'selected' : '' }}>
+                    Pending
+                </option>
+
+            </select>
+
+            <i class="ri-arrow-down-s-line absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+
+        </div>
+
+    </div>
+
+    {{-- SEARCH --}}
+    <div class="flex gap-3 w-full sm:w-auto">
+
+        <div class="relative w-full sm:w-[280px]">
+
+            <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+
+            <input
+                type="text"
+                name="search"
+                value="{{ request('search') }}"
+                placeholder="Search orders..."
+                class="h-11 w-full rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 pl-10 pr-4 text-sm text-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500">
+
+        </div>
+
+        <button type="submit"
+            class="h-11 px-5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition">
+
+            Search
+
         </button>
 
     </div>
 
-    {{-- FILTERS (NO CHANGE) --}}
-    <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-3xl p-4">
-        <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
-
-            <div class="flex flex-wrap items-center gap-3">
-
-                <div class="relative">
-                    <select class="h-11 min-w-[170px] rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-4 pr-10 text-sm font-medium text-gray-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500 appearance-none">
-                        <option>All Status</option>
-                        <option>Delivered</option>
-                        <option>Processing</option>
-                        <option>Shipped</option>
-                        <option>Cancelled</option>
-                    </select>
-                    <i class="ri-arrow-down-s-line absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                </div>
-
-                <div class="relative">
-                    <select class="h-11 min-w-[170px] rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-4 pr-10 text-sm font-medium text-gray-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500 appearance-none">
-                        <option>Payment Status</option>
-                        <option>Paid</option>
-                        <option>Pending</option>
-                    </select>
-                    <i class="ri-arrow-down-s-line absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                </div>
-
-            </div>
-
-            <div class="relative w-full sm:w-[280px]">
-                <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                <input type="text" placeholder="Search orders..."
-                    class="h-11 w-full rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 pl-10 pr-4 text-sm text-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500">
-            </div>
-
-        </div>
-    </div>
+</form>
 
     {{-- TABLE --}}
     <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-3xl overflow-hidden">
@@ -80,7 +139,6 @@
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Payment</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Payment Method</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Status</th>
-                        <th class="px-6 py-4 text-center text-xs font-semibold text-gray-500 dark:text-slate-400">Actions</th>
                     </tr>
                 </thead>
 
@@ -167,17 +225,7 @@
 
                         </td>
 
-                        {{-- ACTIONS --}}
-                        <td class="px-6 py-5 text-center">
-
-                            <a href="{{ route('orders.show', $order->id) }}">
-                                <button class="w-10 h-10 rounded-xl bg-gray-100 hover:bg-indigo-100">
-                                    <i class="ri-eye-line"></i>
-                                </button>
-                            </a>
-
-                        </td>
-
+                       
                     </tr>
 
                     @empty

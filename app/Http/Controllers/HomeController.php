@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Category;
+use App\Models\customer;
 use App\Models\message;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -246,6 +247,16 @@ class HomeController extends Controller
             'transaction_date' => now(),
 
         ]);
+        $customer = Customer::firstOrCreate(
+            ['email' => Auth::user()->email],
+            [
+                'customer_id' => 'CUS-' . rand(1000, 9999),
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'country' => $request->country ?? 'Unknown',
+                'status' => 'Active',
+            ]
+        );
 
             // ================= CLEAR CART =================
             Cart::where('user_id', Auth::id())->delete();

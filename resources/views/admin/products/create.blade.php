@@ -99,17 +99,17 @@
                     </label>
 
                     <select name="category_id"
-    class="h-12 w-full rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-4 text-sm text-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500">
+                    class="h-12 w-full rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-4 text-sm text-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500">
 
-    <option value="">Select Category</option>
+                    <option value="">Select Category</option>
 
-    @foreach($categories as $category)
-        <option value="{{ $category->id }}">
-            {{ $category->name }}
-        </option>
-    @endforeach
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}">
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
 
-</select>
+                </select>
 </div>
 
                 {{-- PRICE --}}

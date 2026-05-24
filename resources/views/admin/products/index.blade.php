@@ -30,6 +30,7 @@
     </div>
 
     {{-- FILTERS --}}
+    <form method="GET" action="{{ route('products.index') }}">
     <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-3xl p-4">
 
         <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
@@ -37,20 +38,29 @@
             {{-- LEFT --}}
             <div class="flex flex-wrap items-center gap-3">
 
-                <select class="h-11 min-w-[170px] rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-4 text-sm text-gray-700 dark:text-slate-200">
-                    <option>All Categories</option>
-                    <option>Electronics</option>
-                    <option>Fashion</option>
-                    <option>Accessories</option>
+                <select name="category"
+                    class="h-11 min-w-[170px] rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-4 text-sm text-gray-700 dark:text-slate-200">
+
+                    <option value="">All Categories</option>
+
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}"
+                            {{ request('category') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+
                 </select>
 
-                <select class="h-11 min-w-[170px] rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-4 text-sm text-gray-700 dark:text-slate-200">
-                    <option>All Status</option>
-                    <option>Active</option>
-                    <option>Low Stock</option>
-                    <option>Out of Stock</option>
-                </select>
+                <select name="status"
+                    class="h-11 min-w-[170px] rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-4 text-sm text-gray-700 dark:text-slate-200">
 
+                    <option value="">All Status</option>
+                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                    <option value="low" {{ request('status') == 'low' ? 'selected' : '' }}>Low Stock</option>
+                    <option value="out" {{ request('status') == 'out' ? 'selected' : '' }}>Out of Stock</option>
+
+                </select>
             </div>
 
             {{-- RIGHT --}}
@@ -58,19 +68,24 @@
 
                 <input
                     type="text"
+                    name="search"
+                    value="{{ request('search') }}"
                     placeholder="Search products..."
                     class="h-11 w-full sm:w-[280px] rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-4 text-sm text-gray-700 dark:text-white"
                 >
-
-                <button class="h-11 px-5 rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-gray-700 dark:text-slate-200">
-                    Export
+                <button type="submit" class="h-11 px-5 rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-gray-700 dark:text-slate-200">
+                    Filter
                 </button>
+                <a href="{{route('admin.products.export',request()->query())}}" type="submit" class="h-11 px-5 rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-gray-700 dark:text-slate-200">
+                    Export
+                </a>
 
             </div>
 
         </div>
 
     </div>
+    </form>
 
     {{-- TABLE --}}
     <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-3xl overflow-hidden">
@@ -173,7 +188,7 @@
 
                     {{-- SALES --}}
                     <td class="px-6 py-5 text-gray-700 dark:text-slate-300">
-                        {{ $product->sales ?? 0 }}
+                        {{ $product->sold ?? 0 }}
                     </td>
 
                     {{-- STATUS --}}

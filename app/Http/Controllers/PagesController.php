@@ -22,12 +22,28 @@ class PagesController extends Controller
     public function insight(){
         return view('admin.dashboards.insights');
     }
-    public function inventroy(){
+    public function inventroy(Request $request)
+{
     $totalProducts = Product::count();
+
     $inStock = Product::where('stock', '>', 10)->count();
+
     $lowStock = Product::whereBetween('stock', [1, 10])->count();
+
     $outStock = Product::where('stock', 0)->count();
-    $products = Product::latest()->get(); // 🔥 THIS WAS MISSING
+
+    // QUERY
+    $products = Product::query();
+
+    // SEARCH
+    if ($request->search) {
+
+        $products->where('name', 'LIKE', '%' . $request->search . '%')
+                 ->orWhere('sku', 'LIKE', '%' . $request->search . '%');
+    }
+
+    // FINAL GET
+    $products = $products->latest()->get();
 
     return view('admin.inventory.inventory', compact(
         'totalProducts',
@@ -36,7 +52,7 @@ class PagesController extends Controller
         'outStock',
         'products'
     ));
-    }
+}
     public function transaction(){
         return view('admin.transaction.transaction');
     }
